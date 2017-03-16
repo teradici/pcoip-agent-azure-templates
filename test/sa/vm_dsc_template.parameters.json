@@ -1,0 +1,18 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmName": {
+      "value": "testVM"
+    },
+    "sourceUrl": {
+      "value": "https://teradeploy.blob.core.windows.net/binaries/PCoIP_agent_release_installer_2.8.0.5813_standard.exe"
+    },
+    "registrationCode": {
+      "value": "test@RegistrationCode"
+    },   
+    "_artifactsLocation": {
+      "value": "../../azure"
+    }    
+  }
+}
