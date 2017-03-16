@@ -1,0 +1,74 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters" : {
+    "subnetId": {
+      "type": "string",
+      "metadata": {
+        "description": "Id of sub network which this network interface belongs to."
+      }
+    },
+    "nicName": {
+      "type": "string",
+      "metadata": {
+        "description": "Network Interface Name."
+      }
+    }
+  },  
+
+  "variables": {
+    "apiVersion": "2015-06-15",
+    "pipName": "[concat(parameters('nicName'), '_PubIP')]" 
+  },
+
+  "resources": [
+    {
+      "apiVersion": "[variables('apiVersion')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('pipName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publicIPAllocationMethod": "Static"
+      },
+      "tags": {
+        "displayName": "PublicIPAddress - PCoIP Agent"
+      }
+    },
+      
+    {
+      "apiVersion": "[variables('apiVersion')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[parameters('nicName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "NetworkInterface - PCoIP Agent"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('pipName'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('pipName'))]"
+              },
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[parameters('subnetId')]"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+
+  "outputs": {
+    "vm_IP": {
+      "type": "string",
+      "value": "[reference(resourceId ('Microsoft.Network/publicIPAddresses', variables('pipName')), variables('apiVersion')).ipAddress]"
+    }
+  }  
+}
