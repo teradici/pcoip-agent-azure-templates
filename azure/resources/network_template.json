@@ -80,7 +80,7 @@
           {
             "name": "pcoip-rule",
             "properties": {
-                "description": "Allow PCOIP",
+                "description": "Allow PCoIP",
                 "protocol": "*",
                 "sourcePortRange": "*",
                 "destinationPortRange": "4172",
@@ -90,7 +90,21 @@
                 "priority": 102,
                 "direction": "Inbound"
             }
-          }          
+          },
+          {
+            "name": "pcoip-rule-2",
+            "properties": {
+                "description": "Allow PCoIP",
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "60443",
+                "sourceAddressPrefix": "INTERNET",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 103,
+                "direction": "Inbound"
+            }
+          }                    
         ]
       }
     },      
