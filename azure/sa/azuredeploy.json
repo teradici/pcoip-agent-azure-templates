@@ -27,21 +27,14 @@
       "metadata": {
         "description": "The base location of resources, such as templates and DSC modules, that the template depends on"
       }
-    },
-    "_agentUrl": {
-      "type": "string",
-      "defaultValue": "https://teradeploy.blob.core.windows.net/binaries/PCoIP_agent_release_installer_2.8.0.5813_standard.exe",
-      "metadata": {
-        "description": "The location of PCoIP Agent Installer file"
-      }
-    }                
+    }
   },  
   "variables": {
     "deploymentApiVersion": "2016-02-01",
     "stdStorageName": "[replace(replace(tolower(concat('pcagent', uniquestring(resourceGroup().id))), '-',''),'.','')]",
     "vmNamePrefix": "stdAgentVM",
     "nicName": "agentNic",
-    "agentUrl": "[parameters('_agentUrl')]"
+    "agentUrl": "https://teradeploy.blob.core.windows.net/binaries/PCoIP_agent_release_installer_2.8.0.5813_standard.exe"
   },  
   "resources": [
     {
