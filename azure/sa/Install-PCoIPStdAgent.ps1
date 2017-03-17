@@ -52,6 +52,7 @@ Configuration InstallPCoIPAgent
 					Write-Output "Active License Code"               
 	                cd "C:\Program Files (x86)\Teradici\PCoIP Agent"
  	                & .\pcoip-register-host.ps1 -RegistrationCode $registrationCode
+ 	                & .\pcoip-validate-license.ps1
                 }
                 
 				$serviceName = "PCoIPAgent"
