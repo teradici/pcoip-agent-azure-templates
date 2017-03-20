@@ -33,13 +33,13 @@ Configuration InstallPCoIPAgent
                             {return $true}
                             else {return $false} }
             SetScript  = {
-                Write-Output "Start to Install PCoIPAgent"
+                Write-Output "Starting to Install PCoIPAgent"
 
                 $sourceUrl = $using:sourceUrl
                 $installerFileName = [System.IO.Path]::GetFileName($sourceUrl)
                 $destFile = "C:\WindowsAzure\PCoIPAgentInstaller\" + $installerFileName
                 
-				Write-Output "Download PCoIP Agent"
+				Write-Output "Downloading PCoIP Agent"
                 Invoke-WebRequest $sourceUrl -OutFile $destFile
 
                 #install the agent
@@ -49,7 +49,7 @@ Configuration InstallPCoIPAgent
                 #register
                 $registrationCode = $using:registrationCode
                 if ($registrationCode) {
-					Write-Output "Active License Code"               
+					Write-Output "Activating License Code"               
 	                cd "C:\Program Files (x86)\Teradici\PCoIP Agent"
  	                & .\pcoip-register-host.ps1 -RegistrationCode $registrationCode
  	                & .\pcoip-validate-license.ps1
@@ -58,7 +58,7 @@ Configuration InstallPCoIPAgent
 				$serviceName = "PCoIPAgent"
 				if ( (Get-Service  $serviceName).status -eq "Stopped" ) 
 				{
-					Write-Output "Starting PCoIP Agent Service for it is not started."
+					Write-Output "Starting PCoIP Agent Service because it is stopped."
 					Start-Service $serviceName | Out-Null
 				}                
 				

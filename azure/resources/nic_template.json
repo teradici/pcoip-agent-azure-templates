@@ -5,7 +5,7 @@
     "subnetId": {
       "type": "string",
       "metadata": {
-        "description": "Id of sub network which this network interface belongs to."
+        "description": "ID of sub network which this network interface belongs to."
       }
     },
     "nicName": {
@@ -17,7 +17,7 @@
   },  
 
   "variables": {
-    "apiVersion": "2015-06-15",
+    "apiVersion": "2016-12-01",
     "pipName": "[concat(parameters('nicName'), '_PubIP')]" 
   },
 

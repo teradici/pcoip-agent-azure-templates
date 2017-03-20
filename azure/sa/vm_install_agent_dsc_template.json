@@ -1,0 +1,58 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters" : {
+    "vmName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Computer Name that this extension will be deployed on."
+      }
+    },
+    "sourceUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "PCoIP Standard Agent URL"
+      }
+    },
+    "registrationCode": {
+      "type": "securestring",
+      "metadata": {
+        "description": "PCoIP Standard Agent License Registration Code."
+      }
+    },       
+    "_artifactsLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "The location of DSC module, that the template depends on"
+      }
+    }      
+  },  
+  "resources": [
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('vmName'), '/PCoIPAgentDscExtension')]", 
+      "apiVersion": "2017-03-30",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.9",
+        "autoUpgradeMinorVersion": "true",
+        "settings": {
+      	  "configuration": {
+		        "url": "[concat(parameters('_artifactsLocation'), '/sa/', 'Install-PCoIPStdAgent.zip')]",
+			      "script": "Install-PCoIPStdAgent.ps1",
+			      "function": "InstallPCoIPAgent"
+		      },                
+		      "configurationArguments": {
+		        "sourceUrl": "[parameters('sourceUrl')]",
+            "registrationCode": "[parameters('registrationCode')]"
+		      },                              
+          "privacy": {
+            "DataCollection": "Disable"
+          }
+        }        
+      }
+    }      
+  ]
+}

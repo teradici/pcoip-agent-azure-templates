@@ -30,7 +30,7 @@
     }
   },  
   "variables": {
-    "deploymentApiVersion": "2016-02-01",
+    "deploymentApiVersion": "2016-09-01",
     "stdStorageName": "[replace(replace(tolower(concat('pcagent', uniquestring(resourceGroup().id))), '-',''),'.','')]",
     "vmNamePrefix": "stdAgentVM",
     "nicName": "agentNic",
@@ -136,7 +136,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), '/sa/', 'vm_dsc_template.json')]",
+          "uri": "[concat(parameters('_artifactsLocation'), '/sa/', 'vm_install_agent_dsc_template.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {

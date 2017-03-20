@@ -33,7 +33,7 @@
   },  
 
   "variables": {
-    "apiVersion": "2015-06-15",
+    "apiVersion": "2016-12-01",
     "nsgName": "pcoipAgentNsg"
   },
 
@@ -52,8 +52,8 @@
           {
             "name": "rdp-rule",
             "properties": {
-                "description": "Allow RDP",
-                "protocol": "TCP",
+                "description": "Allow RDP Session",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRange": "3389",
                 "sourceAddressPrefix": "INTERNET",
@@ -66,8 +66,8 @@
           {
             "name": "web-rule",
             "properties": {
-                "description": "Allow WEB",
-                "protocol": "TCP",
+                "description": "Allow Https traffic only",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRange": "443",
                 "sourceAddressPrefix": "INTERNET",
@@ -80,7 +80,7 @@
           {
             "name": "pcoip-rule",
             "properties": {
-                "description": "Allow PCoIP",
+                "description": "Allow PCoIP Session",
                 "protocol": "*",
                 "sourcePortRange": "*",
                 "destinationPortRange": "4172",
@@ -94,8 +94,8 @@
           {
             "name": "pcoip-rule-2",
             "properties": {
-                "description": "Allow PCoIP",
-                "protocol": "TCP",
+                "description": "Allow PCoIP Diaglostic Traffic",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRange": "60443",
                 "sourceAddressPrefix": "INTERNET",

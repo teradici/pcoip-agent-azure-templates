@@ -42,7 +42,7 @@
         "Standard_A4"
       ],
       "metadata": {
-        "description": "Virtual Machine Types"
+        "description": "Virtual Machine Size"
       }
     },
     "nicName": {
@@ -79,41 +79,44 @@
     {
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[variables('vmSettings').vmNamePrefix]",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2017-03-30",
             "location": "[resourceGroup().location]",
-            "properties": {
-                "hardwareProfile": {
-                    "vmSize": "[variables('vmSettings').vmSize]"
-                },
-                "osProfile": {
-                    "computerName": "[variables('vmSettings').vmNamePrefix]",
-                    "adminUsername": "[variables('vmSettings').adminUser]",
-                    "adminPassword": "[variables('vmSettings').adminPassword]"
-                },
-                "storageProfile": {
-                    "imageReference": {
-                        "publisher": "[variables('vmSettings').os.publisher]",
-                        "offer": "[variables('vmSettings').os.offer]",
-                        "sku": "[variables('vmSettings').os.sku]",
-                        "version": "[variables('vmSettings').os.version]"
-                    },
-                    "osDisk": {
-                        "name": "osdisk",
-                        "vhd": {
-                            "uri": "[concat('http://',parameters('storageAccountName'),'.blob.core.windows.net/vhds/', variables('vmSettings').vmNamePrefix, variables('vmSettings').osDiskPrefix, '.vhd')]"
-                        },
-                        "caching": "ReadWrite",
-                        "createOption": "FromImage"
-                    }
-                },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('vmSettings').nicName)]"
-                        }
-                    ]
-                }
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('vmSettings').vmSize]"
+        },
+        "osProfile": {
+          "computerName": "[variables('vmSettings').vmNamePrefix]",
+          "adminUsername": "[variables('vmSettings').adminUser]",
+          "adminPassword": "[variables('vmSettings').adminPassword]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('vmSettings').os.publisher]",
+            "offer": "[variables('vmSettings').os.offer]",
+            "sku": "[variables('vmSettings').os.sku]",
+            "version": "[variables('vmSettings').os.version]"
+          },
+          "osDisk": {
+            "name": "osdisk",
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[reference(concat('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))).PrimaryEndpoints.Blob]"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('vmSettings').nicName)]"
             }
+          ]
         }
+      }
+    }
   ]
 }
