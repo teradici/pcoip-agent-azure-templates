@@ -51,11 +51,11 @@
         "description": "Network Interface used by this Virtual Machine"
       }
     }
-  },  
+  },
 
   "variables": {
     "osSettings": {
-      "Windows Server 2016":  {  
+      "Windows Server 2016": {
         "publisher": "MicrosoftWindowsServer",
         "offer": "WindowsServer",
         "sku": "2016-Datacenter",
@@ -64,23 +64,26 @@
     },
 
     "vmSettings": {
-      "vmNamePrefix" : "[parameters('vmNamePrefix')]",
+      "vmNamePrefix": "[parameters('vmNamePrefix')]",
       "adminUser": "[parameters('adminUser')]",
       "adminPassword": "[parameters('adminPassword')]",
-      "vmSize"  : "[parameters('vmSize')]",
-      "osDiskPrefix" : "os_disk",
-      "dataDiskPrefix" : "data_disk",
+      "vmSize": "[parameters('vmSize')]",
+      "osDiskPrefix": "os_disk",
+      "dataDiskPrefix": "data_disk",
       "nicName": "[parameters('nicName')]",
       "os": "[variables('osSettings')[parameters('osType')]]"
-    }
+    },
+
+    "storageUrl": "[concat('http://', parameters('storageAccountName'), '.blob.core.windows.net')]"
+
   },
-  
+
   "resources": [
     {
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[variables('vmSettings').vmNamePrefix]",
       "apiVersion": "2017-03-30",
-            "location": "[resourceGroup().location]",
+      "location": "[resourceGroup().location]",
       "properties": {
         "hardwareProfile": {
           "vmSize": "[variables('vmSettings').vmSize]"
@@ -106,7 +109,7 @@
         "diagnosticsProfile": {
           "bootDiagnostics": {
             "enabled": true,
-            "storageUri": "[reference(concat('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))).PrimaryEndpoints.Blob]"
+            "storageUri": "[variables('storageUrl')]"
           }
         },
         "networkProfile": {
