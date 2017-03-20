@@ -2,7 +2,7 @@
 
 # Deploy Teradici PCoIP Standard Agent on Microsoft Azure
 
-This will create a Storage Account, a VNet and a Microsoft Windows Server 2016 VM (with Teradici PCoIP Standard Agent installed) in your Microsoft Azure account
+This will create a new Resource Group with a Storage Account, a VNet and a Microsoft Windows Server 2016 VM (with Teradici PCoIP Standard Agent installed) in your Microsoft Azure account
 
 ### What you need before you start the deployment
 
