@@ -94,15 +94,15 @@
           {
             "name": "pcoip-rule-2",
             "properties": {
-                "description": "Allow PCoIP Diaglostic Traffic",
-                "protocol": "Tcp",
-                "sourcePortRange": "*",
-                "destinationPortRange": "60443",
-                "sourceAddressPrefix": "INTERNET",
-                "destinationAddressPrefix": "*",
-                "access": "Allow",
-                "priority": 301,
-                "direction": "Inbound"
+              "description": "Allow PCoIP Diagnostics Traffic",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "60443",
+              "sourceAddressPrefix": "INTERNET",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 301,
+              "direction": "Inbound"
             }
           }                    
         ]
