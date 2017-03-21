@@ -7,12 +7,12 @@ This will create a new Resource Group with a Storage Account, a VNet and a Micro
 ### What you need before you start the deployment
 
 - A Microsoft Azure account
-    * To create a free Microsoft Azure account, goto [https://azure.microsoft.com/en-in/free/](https://azure.microsoft.com/en-in/free/)
+    * To create a free Microsoft Azure account, go to [https://azure.microsoft.com/en-in/free/](https://azure.microsoft.com/en-in/free/)
 	* If you are using an existing Microsoft Azure account, make sure you have write permission
-- A registration code for Teradici PCoIP Standard Agent
-    * To obtain a registration code for Teradici PCoIP Standard Agent, goto [todo](todo)
+- A Registration Code for Teradici PCoIP Standard Agent
+    * To obtain a Registration Code for Teradici PCoIP Standard Agent, go to [todo](todo)
 - Teradici PCoIP Client
-    * To download Teradici PCoIP Client, goto [http://www.teradici.com/product-finder/client-downloads](http://www.teradici.com/product-finder/client-downloads)	
+    * To download Teradici PCoIP Client, go to [http://www.teradici.com/product-finder/client-downloads](http://www.teradici.com/product-finder/client-downloads)	
 
 ### To deploy
 
@@ -29,7 +29,7 @@ This will create a new Resource Group with a Storage Account, a VNet and a Micro
 	* For Location: select a location
 	* For Admin User: enter a user name (note: the user name cannot be "Admin"; the user name and password will be used later to establish the PCoIP session)
 	* For Admin Password: enter a password
-	* For registration code: enter the registration code you obtained from Teradici
+	* For Registration Code: enter the Registration Code you obtained from Teradici
 	* Check the checkbox "I agree to the terms and conditions stated above" and click "Purchase" button
 	* The deployment will now start, which will take about 20 minutes to complete
 	
@@ -54,7 +54,7 @@ This will create a new Resource Group with a Storage Account, a VNet and a Micro
 ### Additional information
   * [Teradici Cloud Access Software](http://www.teradici.com/products-and-solutions/pcoip-products/cloud-access-software)
   * [Teradici PCoIP Standard Agent Admin Guide](http://www.teradici.com/web-help/ter1505006/2.6/)
-  * [Reradici Community Forum](https://communities.teradici.com/)
+  * [Teradici Community Forum](https://communities.teradici.com/)
   
 ### Credit
   * Some content is based off of the Azure Quickstart Templates, Copyright (c) Microsoft Azure. With the following license: https://github.com/Azure/azure-quickstart-templates/blob/master/LICENSE
