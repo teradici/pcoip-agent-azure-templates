@@ -28,10 +28,11 @@
       "apiVersion": "2016-12-01",
       "location": "[resourceGroup().location]",
       "sku": {
-        "name": "[parameters('storageType')]"
+        "name": "[parameters('storageType')]",
+        "tier": "Standard"
       },
       "kind": "Storage",
-      "properties": {}   
+      "properties": {}
     }
   ]
 }

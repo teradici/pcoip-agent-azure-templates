@@ -72,10 +72,7 @@
       "dataDiskPrefix": "data_disk",
       "nicName": "[parameters('nicName')]",
       "os": "[variables('osSettings')[parameters('osType')]]"
-    },
-
-    "storageUrl": "[concat('http://', parameters('storageAccountName'), '.blob.core.windows.net')]"
-
+    }
   },
 
   "resources": [
@@ -109,7 +106,7 @@
         "diagnosticsProfile": {
           "bootDiagnostics": {
             "enabled": true,
-            "storageUri": "[variables('storageUrl')]"
+            "storageUri": "[reference(concat('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))).primaryEndpoints.blob]"
           }
         },
         "networkProfile": {
