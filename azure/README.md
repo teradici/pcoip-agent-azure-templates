@@ -38,7 +38,7 @@ This will create a new Resource Group with a Storage Account, a VNet and a Micro
 - Find out the public ip address of the Teradici PCoIP Standard Agent
     * Login to [https://portal.azure.com](https://portal.azure.com) using your account credentials
 	* Click "Resource groups"
-	* Find the resource group whose name starts with ..., click on it
+	* Find the resource group with the name you entered during the deployment, click on it
 	* Click the "Public IP address" resource. You will be shown the IP Address	
 - Connect Teradici PCoIP Client to the Teradici PCoIP Standard Agent
 	* Using the IP address found in the prevous step, you can now connect Teradici PCoIP Client to the Teradici PCoIP Standard Agent.
