@@ -52,47 +52,47 @@
           {
             "name": "rdp-rule",
             "properties": {
-                "description": "Allow RDP Session",
-                "protocol": "Tcp",
-                "sourcePortRange": "*",
-                "destinationPortRange": "3389",
-                "sourceAddressPrefix": "INTERNET",
-                "destinationAddressPrefix": "*",
-                "access": "Allow",
-                "priority": 100,
-                "direction": "Inbound"
+              "description": "Allow RDP Session",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3389",
+              "sourceAddressPrefix": "INTERNET",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
             }
           },
           {
-            "name": "web-rule",
+            "name": "pcoip-rule-1",
             "properties": {
-                "description": "Allow Https traffic only",
-                "protocol": "Tcp",
-                "sourcePortRange": "*",
-                "destinationPortRange": "443",
-                "sourceAddressPrefix": "INTERNET",
-                "destinationAddressPrefix": "*",
-                "access": "Allow",
-                "priority": 200,
-                "direction": "Inbound"
-            }
-          },
-          {
-            "name": "pcoip-rule",
-            "properties": {
-                "description": "Allow PCoIP Session",
-                "protocol": "*",
-                "sourcePortRange": "*",
-                "destinationPortRange": "4172",
-                "sourceAddressPrefix": "INTERNET",
-                "destinationAddressPrefix": "*",
-                "access": "Allow",
-                "priority": 300,
-                "direction": "Inbound"
+              "description": "Allow PCoIP Broker Protocol",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "443",
+              "sourceAddressPrefix": "INTERNET",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 200,
+              "direction": "Inbound"
             }
           },
           {
             "name": "pcoip-rule-2",
+            "properties": {
+              "description": "Allow PCoIP Session",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "4172",
+              "sourceAddressPrefix": "INTERNET",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 201,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "pcoip-rule-3",
             "properties": {
               "description": "Allow PCoIP Diagnostics Traffic",
               "protocol": "Tcp",
@@ -101,7 +101,7 @@
               "sourceAddressPrefix": "INTERNET",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 301,
+              "priority": 202,
               "direction": "Inbound"
             }
           }                    
