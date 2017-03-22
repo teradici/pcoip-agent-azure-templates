@@ -1,0 +1,169 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters" : {
+    "adminUser": {
+      "type": "string",
+      "defaultValue": "adminUser",
+      "metadata": {
+        "description": "Username for the Virtual Machine."
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Password for the Virtual Machine."
+      }
+    },    
+    "registrationCode": {
+      "type": "securestring",
+      "metadata": {
+        "description": "PCoIP Standard Agent License Registration Code."
+      }
+    },       
+    "_artifactsLocation": {
+      "type": "string",
+      "defaultValue": "https://raw.githubusercontent.com/teradici/deployments/master/azure",
+      "metadata": {
+        "description": "The base location of resources, such as templates and DSC modules, that the template depends on"
+      }
+    }
+  },  
+  "variables": {
+    "deploymentApiVersion": "2016-09-01",
+    "stdStorageName": "[replace(replace(tolower(concat('pcagent', uniquestring(resourceGroup().id))), '-',''),'.','')]",
+    "vmNamePrefix": "stdAgentVM",
+    "nicName": "agentNic",
+    "agentUrl": "https://teradeploy.blob.core.windows.net/binaries/PCoIP_agent_release_installer_2.8.0.5813_standard.exe"
+  },  
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "deploySA",
+      "apiVersion": "[variables('deploymentApiVersion')]",        
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'), '/resources/', 'storageAccount_template.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "storageAccountName": {
+            "value": "[variables('stdStorageName')]"
+          }
+        }         
+      }
+    },
+
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "depolyVNet",
+      "apiVersion": "[variables('deploymentApiVersion')]",        
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'), '/resources/', 'network_template.json')]",
+          "contentVersion": "1.0.0.0"
+        }
+      }
+    },
+
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "depolyNIC",
+      "apiVersion": "[variables('deploymentApiVersion')]",        
+      "dependsOn": [
+        "depolyVNet"        
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'), '/resources/', 'nic_template.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "domainNameLabel": {
+            "value": "[tolower(replace(concat(variables('vmNamePrefix'), '-', uniqueString(resourceGroup().name)), '.',''))]"
+          },
+          "subnetId": {
+            "value": "[reference('depolyVNet').outputs.subnetRef.value]"
+          },
+          "nicName": {
+            "value": "[variables('nicName')]"
+          }
+        }         
+      }
+    },
+
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "deployVM",
+      "apiVersion": "[variables('deploymentApiVersion')]",        
+      "dependsOn": [
+        "deploySA",
+        "depolyNIC"       
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'), '/sa/', 'vm_template.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "vmNamePrefix": {
+            "value": "[variables('vmNamePrefix')]"
+          },
+          "adminUser": {
+            "value": "[parameters('adminUser')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "nicName": {
+            "value": "[variables('nicName')]"
+          },
+          "storageAccountName": {
+            "value": "[variables('stdStorageName')]"            
+          }
+        }         
+      }
+    },
+
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "deployStdAgentDsc",
+      "apiVersion": "[variables('deploymentApiVersion')]",        
+      "dependsOn": [
+        "deployVM"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'), '/sa/', 'vm_install_agent_dsc_template.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "vmName": {
+            "value": "[variables('vmNamePrefix')]"
+          },
+          "sourceUrl": {
+            "value": "[variables('agentUrl')]"
+          },
+          "registrationCode": {
+            "value": "[parameters('registrationCode')]"
+          },
+          "_artifactsLocation": {
+            "value": "[parameters('_artifactsLocation')]"
+          }
+        }         
+      }
+    }    
+  ],
+
+  "outputs": {
+    "vm_fqdn": {
+      "type": "string",
+      "value": "[reference('depolyNIC').outputs.vm_fqdn.value]"
+    }
+  }
+}
