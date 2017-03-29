@@ -69,30 +69,35 @@ Configuration InstallPCoIPAgent
                 $registrationCode = $using:registrationCode
                 if ($registrationCode) {
 					# Insert a delay before activating license
-					Start-Sleep -Seconds (5)
-
 	                cd "C:\Program Files (x86)\Teradici\PCoIP Agent"
 
 					Write-Verbose "Activating License Code"               
- 	                & .\pcoip-register-host.ps1 -RegistrationCode $registrationCode
-					if (-not $?) {
-						$errMsg = "Failed to activate License Code."
+ 	                $ret = & .\pcoip-register-host.ps1 -RegistrationCode $registrationCode
+					$isExeSucc = $?
+
+					if ($isExeSucc) {
+						Write-Verbose "succeeded to activate License Code." 
+					} else {
+						$retMsg = $ret | Out-String
+						$errMsg = "Failed to activate License Code because " + $retMsg
 						Write-Verbose  $errMsg              
 						throw $errMsg
 					}
 
 					Write-Verbose "Validating License"               
- 	                & .\pcoip-validate-license.ps1
-					if (-not $?) {
-						$errMsg = "Failed to validate license."
+ 	                $ret = & .\pcoip-validate-license.ps1
+					$isExeSucc = $?
+
+					if ($isExeSucc) {
+						Write-Verbose "succeeded to validate License."
+					} else {
+						$retMsg = $ret | Out-String
+						$errMsg = "Failed to validate license because " + $retMsg
 						Write-Verbose  $errMsg              
 						throw $errMsg
 					}
                 }
                
-				# Insert a delay before the reboot machine / start service
-				Start-Sleep -Seconds (10)
-
 				if ($rebootRequired) {
 	                Write-Verbose "Request reboot machine."
 			        # Setting the global:DSCMachineStatus = 1 tells DSC that a reboot is required
@@ -100,9 +105,20 @@ Configuration InstallPCoIPAgent
 				} else {				
 					#start service if it is not started
 					$serviceName = "PCoIPAgent"
-					if ( (Get-Service  $serviceName).status -eq "Stopped" )	{
+					$svc = Get-Service -Name $serviceName   
+
+					if ($svc.StartType -eq "Disabled") {
+						Set-Service -name  $serviceName -StartupType Automatic
+					}
+					
+					if ($svc.status -eq "Paused") {
+						$svc.Continue()
+					}
+
+					if ( $svc.status -eq "Stopped" )	{
 						Write-Verbose "Starting PCoIP Agent Service because it is at stopped status."
-						Start-Service $serviceName
+						$svc.Start()
+						$svc.WaitForStatus("Running", 120)
 					}
 				}
 				
