@@ -4,7 +4,6 @@
   "parameters" : {
     "adminUser": {
       "type": "string",
-      "defaultValue": "adminUser",
       "metadata": {
         "description": "Username for the Virtual Machine."
       }
@@ -16,7 +15,7 @@
       }
     },    
     "registrationCode": {
-      "type": "securestring",
+      "type": "string",
       "metadata": {
         "description": "PCoIP Standard Agent License Registration Code."
       }
