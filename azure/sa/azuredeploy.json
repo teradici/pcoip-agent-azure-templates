@@ -18,9 +18,9 @@
         "minLength": 12,
         "maxLength": 123
       }
-    },    
+    },
     "registrationCode": {
-      "type": "string",
+      "type": "securestring",
       "metadata": {
         "description": "PCoIP Standard Agent License Registration Code."
       }
