@@ -49,7 +49,6 @@ Configuration InstallPCoIPAgent
                 
 				Write-Verbose "Downloading PCoIP Agent"
                 Invoke-WebRequest $sourceUrl -OutFile $destFile
-				#verify md5
 
                 #install the agent
 				Write-Verbose "Installing PCoIP Agent"
