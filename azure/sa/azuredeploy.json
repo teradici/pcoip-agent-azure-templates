@@ -5,18 +5,18 @@
     "adminUser": {
       "type": "string",
       "defaultValue": "adminUser",
+      "minLength": 2,
+      "maxLength": 20,
       "metadata": {
-        "description": "Username for the Virtual Machine.",
-        "minLength": 2,
-        "maxLength": 20
+        "description": "Username for the Virtual Machine."
       }
     },
     "adminPassword": {
       "type": "securestring",
+      "minLength": 12,
+      "maxLength": 123,
       "metadata": {
-        "description": "Password for the Virtual Machine.",
-        "minLength": 12,
-        "maxLength": 123
+        "description": "Password for the Virtual Machine."
       }
     },
     "registrationCode": {
