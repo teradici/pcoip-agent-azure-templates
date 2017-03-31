@@ -4,9 +4,11 @@
   "parameters" : {
     "vnetName": {
       "type": "string",
-      "defaultValue": "PCoIP_VNET",
+      "defaultValue": "pcoip-vnet",
       "metadata": {
-        "description": "Name for the Virtual Network."
+        "description": "Name of the Virtual Network.",
+        "minLength": 2,
+        "maxLength": 64
       }
     },
     "vnetPrefix": {
@@ -18,9 +20,9 @@
     },
     "subnetName": {
       "type": "string",
-      "defaultValue": "StdAgent",
+      "defaultValue": "stdAgentVM-subnet",
       "metadata": {
-        "description": "Name for the subnet."
+        "description": "Name of the agent subnet."
       }
     },
     "subnetPrefix": {
@@ -33,90 +35,15 @@
   },  
 
   "variables": {
-    "apiVersion": "2016-12-01",
-    "nsgName": "pcoipAgentNsg"
+    "apiVersion": "2016-12-01"
   },
 
   "resources": [
     {
       "apiVersion": "[variables('apiVersion')]",
-      "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "[variables('nsgName')]",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "displayName": "NSG - PCoIP Agent"
-      },
-      
-      "properties": {
-	      "securityRules": [
-          {
-            "name": "rdp-rule",
-            "properties": {
-              "description": "Allow RDP Session",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "3389",
-              "sourceAddressPrefix": "INTERNET",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 100,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "pcoip-rule-1",
-            "properties": {
-              "description": "Allow PCoIP Broker Protocol",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "443",
-              "sourceAddressPrefix": "INTERNET",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 200,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "pcoip-rule-2",
-            "properties": {
-              "description": "Allow PCoIP Session",
-              "protocol": "*",
-              "sourcePortRange": "*",
-              "destinationPortRange": "4172",
-              "sourceAddressPrefix": "INTERNET",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 201,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "pcoip-rule-3",
-            "properties": {
-              "description": "Allow PCoIP Diagnostics Traffic",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "60443",
-              "sourceAddressPrefix": "INTERNET",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 202,
-              "direction": "Inbound"
-            }
-          }                    
-        ]
-      }
-    },      
-      
-    {
-      "apiVersion": "[variables('apiVersion')]",
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[parameters('vnetName')]",
       "location": "[resourceGroup().location]",
-      "dependsOn": [
-   	    "[concat('Microsoft.Network/networkSecurityGroups', '/', variables('nsgName'))]"
-      ],        
       "tags": {
         "displayName": "VNet - PCoIP Agent"
       },
@@ -130,10 +57,7 @@
           {
             "name": "[parameters('subnetName')]",
             "properties": {
-                "addressPrefix": "[parameters('subnetPrefix')]",
-                "networkSecurityGroup": {
-                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgName'))]"
-                }                
+                "addressPrefix": "[parameters('subnetPrefix')]"
             }
           }
         ]
