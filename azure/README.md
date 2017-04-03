@@ -18,7 +18,7 @@ The following procedure will create a new Resource Group with a Storage Account,
 
 - Click the following button to deploy:
 
-<a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fteradici%2Fdeployments%2Fmaster%2Fazure%2Fsa%2Fazuredeploy.json">
+<a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fteamthunder.blob.core.windows.net%2Finternal-testing%2Fdeployments%2Fmaster%2Fazure%2Fsa%2Fazuredeploy.json">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
