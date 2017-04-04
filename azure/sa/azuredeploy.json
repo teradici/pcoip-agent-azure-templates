@@ -1,7 +1,7 @@
 {
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
-  "parameters" : {
+  "parameters": {
     "adminUser": {
       "type": "string",
       "defaultValue": "adminUser",
@@ -21,13 +21,14 @@
     },
     "registrationCode": {
       "type": "securestring",
+      "minLength": 21,
       "metadata": {
         "description": "PCoIP Standard Agent License Registration Code."
       }
-    },       
+    },
     "_artifactsLocation": {
       "type": "string",
-      "defaultValue": "https://raw.githubusercontent.com/teradici/deployments/master/azure",
+      "defaultValue": "https://devtemplatestore.blob.core.windows.net/templates/master/deployments/azure",
       "metadata": {
         "description": "The base location of resources, such as templates and DSC modules, that the template depends on"
       }
@@ -40,7 +41,7 @@
     "subnetName": "stdAgentVM-subnet",
     "vmNamePrefix": "stdAgentVM",
     "nsgName": "pcoip-agent-nsg",
-    "agentUrl": "https://teradeploy.blob.core.windows.net/binaries/PCoIP_agent_release_installer_2.8.0.5813_standard.exe"
+    "agentUrl": "https://binarystore.blob.core.windows.net/agents/2.8/PCoIP_agent_release_installer_2.8.0.5813_standard.exe"
   },
   "resources": [
     {
