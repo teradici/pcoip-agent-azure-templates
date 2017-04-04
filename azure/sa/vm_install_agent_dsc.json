@@ -37,21 +37,28 @@
         "publisher": "Microsoft.Powershell",
         "type": "DSC",
         "typeHandlerVersion": "2.9",
-        "autoUpgradeMinorVersion": "true",
+        "autoUpgradeMinorVersion": true,
         "settings": {
-      	  "configuration": {
-		        "url": "[concat(parameters('_artifactsLocation'), '/sa/', 'Install-PCoIPStdAgent.zip')]",
-			      "script": "Install-PCoIPStdAgent.ps1",
-			      "function": "InstallPCoIPAgent"
-		      },                
-		      "configurationArguments": {
-		        "sourceUrl": "[parameters('sourceUrl')]",
-            "registrationCode": "[parameters('registrationCode')]"
-		      },                              
+          "configuration": {
+            "url": "[concat(parameters('_artifactsLocation'), '/sa/', 'Install-PCoIPStdAgent.zip')]",
+            "script": "Install-PCoIPStdAgent.ps1",
+            "function": "InstallPCoIPAgent"
+          },
+          "configurationArguments": {
+            "sourceUrl": "[parameters('sourceUrl')]"
+          },
           "privacy": {
             "DataCollection": "Disable"
           }
-        }        
+        },
+        "protectedSettings": {
+          "configurationArguments": {
+            "registrationCodeCredential": {
+              "userName": "dummyUser",
+              "password": "[parameters('registrationCode')]"
+            }
+          }
+        }
       }
     }      
   ]

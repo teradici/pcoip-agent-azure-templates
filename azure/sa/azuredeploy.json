@@ -1,7 +1,7 @@
 {
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
-  "parameters" : {
+  "parameters": {
     "adminUser": {
       "type": "string",
       "defaultValue": "adminUser",
@@ -21,10 +21,11 @@
     },
     "registrationCode": {
       "type": "securestring",
+      "minLength": 21,
       "metadata": {
         "description": "PCoIP Standard Agent License Registration Code."
       }
-    },       
+    },
     "_artifactsLocation": {
       "type": "string",
       "defaultValue": "https://teamthunder.blob.core.windows.net/internal-testing/deployments/master/azure",
@@ -32,19 +33,19 @@
         "description": "The base location of resources, such as templates and DSC modules, that the template depends on"
       }
     }
-  },  
+  },
   "variables": {
     "deploymentApiVersion": "2016-09-01",
     "stdStorageName": "[replace(replace(tolower(concat('pcagent', uniquestring(resourceGroup().id))), '-',''),'.','')]",
     "vmNamePrefix": "stdAgentVM",
     "nicName": "agentNic",
     "agentUrl": "https://teradeploy.blob.core.windows.net/binaries/PCoIP_agent_release_installer_2.8.0.5813_standard.exe"
-  },  
+  },
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
       "name": "deploySA",
-      "apiVersion": "[variables('deploymentApiVersion')]",        
+      "apiVersion": "[variables('deploymentApiVersion')]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -55,14 +56,14 @@
           "storageAccountName": {
             "value": "[variables('stdStorageName')]"
           }
-        }         
+        }
       }
     },
 
     {
       "type": "Microsoft.Resources/deployments",
       "name": "depolyVNet",
-      "apiVersion": "[variables('deploymentApiVersion')]",        
+      "apiVersion": "[variables('deploymentApiVersion')]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -75,9 +76,9 @@
     {
       "type": "Microsoft.Resources/deployments",
       "name": "depolyNIC",
-      "apiVersion": "[variables('deploymentApiVersion')]",        
+      "apiVersion": "[variables('deploymentApiVersion')]",
       "dependsOn": [
-        "depolyVNet"        
+        "depolyVNet"
       ],
       "properties": {
         "mode": "Incremental",
@@ -95,17 +96,17 @@
           "nicName": {
             "value": "[variables('nicName')]"
           }
-        }         
+        }
       }
     },
 
     {
       "type": "Microsoft.Resources/deployments",
       "name": "deployVM",
-      "apiVersion": "[variables('deploymentApiVersion')]",        
+      "apiVersion": "[variables('deploymentApiVersion')]",
       "dependsOn": [
         "deploySA",
-        "depolyNIC"       
+        "depolyNIC"
       ],
       "properties": {
         "mode": "Incremental",
@@ -127,16 +128,16 @@
             "value": "[variables('nicName')]"
           },
           "storageAccountName": {
-            "value": "[variables('stdStorageName')]"            
+            "value": "[variables('stdStorageName')]"
           }
-        }         
+        }
       }
     },
 
     {
       "type": "Microsoft.Resources/deployments",
       "name": "deployStdAgentDsc",
-      "apiVersion": "[variables('deploymentApiVersion')]",        
+      "apiVersion": "[variables('deploymentApiVersion')]",
       "dependsOn": [
         "deployVM"
       ],
@@ -159,9 +160,9 @@
           "_artifactsLocation": {
             "value": "[parameters('_artifactsLocation')]"
           }
-        }         
+        }
       }
-    }    
+    }
   ],
 
   "outputs": {
