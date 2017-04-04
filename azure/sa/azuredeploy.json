@@ -28,7 +28,7 @@
     },
     "_artifactsLocation": {
       "type": "string",
-      "defaultValue": "https://teamthunder.blob.core.windows.net/internal-testing/deployments/master/azure",
+      "defaultValue": "https://devtemplatestore.blob.core.windows.net/templates/master/deployments/azure",
       "metadata": {
         "description": "The base location of resources, such as templates and DSC modules, that the template depends on"
       }
@@ -37,9 +37,11 @@
   "variables": {
     "deploymentApiVersion": "2016-09-01",
     "stdStorageName": "[replace(replace(tolower(concat('pcagent', uniquestring(resourceGroup().id))), '-',''),'.','')]",
+    "vnetName": "pcoip-vnet",
+    "subnetName": "stdAgentVM-subnet",
     "vmNamePrefix": "stdAgentVM",
-    "nicName": "agentNic",
-    "agentUrl": "https://teradeploy.blob.core.windows.net/binaries/PCoIP_agent_release_installer_2.8.0.5813_standard.exe"
+    "nsgName": "pcoip-agent-nsg",
+    "agentUrl": "https://binarystore.blob.core.windows.net/agents/2.8/PCoIP_agent_release_installer_2.8.0.5813_standard.exe"
   },
   "resources": [
     {
@@ -62,6 +64,24 @@
 
     {
       "type": "Microsoft.Resources/deployments",
+      "name": "depolyAgentNsg",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'), '/resources/', 'pcoip_agent_nsg.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "nsgName": {
+            "value": "[variables('nsgName')]"
+          }
+        }
+      }
+    },
+
+    {
+      "type": "Microsoft.Resources/deployments",
       "name": "depolyVNet",
       "apiVersion": "[variables('deploymentApiVersion')]",
       "properties": {
@@ -69,6 +89,14 @@
         "templateLink": {
           "uri": "[concat(parameters('_artifactsLocation'), '/resources/', 'virtual_network.json')]",
           "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "vnetName": {
+            "value": "[variables('vnetName')]"
+          },
+          "subnetName": {
+            "value": "[variables('subnetName')]"
+          }
         }
       }
     },
@@ -78,6 +106,7 @@
       "name": "depolyNIC",
       "apiVersion": "[variables('deploymentApiVersion')]",
       "dependsOn": [
+        "depolyAgentNsg",
         "depolyVNet"
       ],
       "properties": {
@@ -87,14 +116,17 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "domainNameLabel": {
-            "value": "[tolower(replace(concat(variables('vmNamePrefix'), '-', uniqueString(resourceGroup().name)), '.',''))]"
+          "vmName": {
+            "value": "[variables('vmNamePrefix')]"
           },
-          "subnetId": {
-            "value": "[reference('depolyVNet').outputs.subnetRef.value]"
+          "nsgName": {
+            "value": "[variables('nsgName')]"
           },
-          "nicName": {
-            "value": "[variables('nicName')]"
+          "vnetName": {
+            "value": "[variables('vnetName')]"
+          },
+          "subnetName": {
+            "value": "[variables('subnetName')]"
           }
         }
       }
@@ -125,7 +157,7 @@
             "value": "[parameters('adminPassword')]"
           },
           "nicName": {
-            "value": "[variables('nicName')]"
+            "value": "[reference('depolyNIC').outputs.nicName.value]"
           },
           "storageAccountName": {
             "value": "[variables('stdStorageName')]"
