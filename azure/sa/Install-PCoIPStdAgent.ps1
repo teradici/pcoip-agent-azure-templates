@@ -5,10 +5,12 @@ Configuration InstallPCoIPAgent
      	[Parameter(Mandatory=$true)]
      	[String] $sourceUrl,
     
-     	[Parameter(Mandatory=$false)]
-     	[String] $registrationCode     	
+     	[Parameter(Mandatory=$true)]
+     	[PSCredential] $registrationCodeCredential
 	)
 	
+	$downloadPath = "C:\WindowsAzure\Downloads"
+
     Node "localhost"
     {
         LocalConfigurationManager
@@ -20,7 +22,7 @@ Configuration InstallPCoIPAgent
         {
             Ensure          = "Present"
             Type            = "Directory"
-            DestinationPath = "C:\WindowsAzure\PCoIPAgentInstaller"
+            DestinationPath = $downloadPath
         }
 
         Script Install_PCoIPAgent
@@ -28,9 +30,8 @@ Configuration InstallPCoIPAgent
             DependsOn  = "[File]Download_Directory"
             GetScript  = { @{ Result = "Install_PCoIPAgent" } }
 
-            #TODO: Check for other agent types as well?
             TestScript = {
-				if ( Get-Item -path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\PCoIP Standard Agent" -ErrorAction SilentlyContinue )  {
+				if (Test-Path -path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\PCoIP Standard Agent")  {
 					return $true
 				}else {
 					return $false
@@ -45,7 +46,7 @@ Configuration InstallPCoIPAgent
 
                 $sourceUrl = $using:sourceUrl
                 $installerFileName = [System.IO.Path]::GetFileName($sourceUrl)
-                $destFile = "C:\WindowsAzure\PCoIPAgentInstaller\" + $installerFileName
+                $destFile = $using:downloadPath + "\" + $installerFileName
                 
 				Write-Verbose "Downloading PCoIP Agent"
                 Invoke-WebRequest $sourceUrl -OutFile $destFile
@@ -67,8 +68,8 @@ Configuration InstallPCoIPAgent
 					}
 				}
 
-                #register
-                $registrationCode = $using:registrationCode
+                #register code is stored at the password property of PSCredential object
+                $registrationCode = ($using:registrationCodeCredential).GetNetworkCredential().password
                 if ($registrationCode) {
 					# Insert a delay before activating license
 	                cd "C:\Program Files (x86)\Teradici\PCoIP Agent"
