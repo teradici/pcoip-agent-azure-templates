@@ -27,7 +27,7 @@
     },       
     "_artifactsLocation": {
       "type": "string",
-      "defaultValue": "https://devtemplatestore.blob.core.windows.net/templates/master/deployments/azure",
+      "defaultValue": "https://teamthunder.blob.core.windows.net/internal-testing/deployments/master/azure",
       "metadata": {
         "description": "The base location of resources, such as templates and DSC modules, that the template depends on"
       }
