@@ -38,7 +38,7 @@
     "deploymentApiVersion": "2016-09-01",
     "storageName": "[replace(replace(tolower(concat('pcagent', uniquestring(resourceGroup().id))), '-',''),'.','')]",
     "vnetName": "pcoip-vnet",
-    "subnetName": "stdAgentVM-subnet",
+    "subnetName": "agentVM-subnet",
     "vmNamePrefix": "agentVM",
     "nsgName": "pcoip-agent-nsg",
     "agentUrl": "https://binarystore.blob.core.windows.net/agents/2.8/PCoIP_agent_release_installer_2.8.0.5813_graphics.exe",

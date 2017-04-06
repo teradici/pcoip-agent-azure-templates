@@ -55,7 +55,12 @@ Configuration InstallPCoIPAgent
                 Invoke-WebRequest $nvidiaSourceUrl -OutFile $destFile
 
                 Write-Verbose "Installing Nvidia driver"
-                Start-Process -FilePath $destFile -ArgumentList "/s" -Wait
+                $ret = Start-Process -FilePath $destFile -ArgumentList "/s" -PassThru -Wait
+				if ($ret.ExitCode -ne 0) {
+					$errMsg = "Failed to install nvidia driver. Exit Code: " + $ret.ExitCode
+					Write-Verbose $errMsg
+					throw $errMsg
+				}
 
                 Write-Verbose "Finished Nvidia driver Installation"
             }
