@@ -39,7 +39,7 @@
     ```
 	Add-AzureRmAccount
 	$azureRGName = "graphicsAgent-rg" #keep it short and with no special characters and no capitals
-	New-AzureRmResourceGroup -Name $azureRGName -Location "SOUTH CENTRAL US" # location must be one of "EAST US", "NORTH CENTRAL US", "SOUTH CENTRAL US"
+	New-AzureRmResourceGroup -Name $azureRGName -Location "SOUTH CENTRAL US" # location must be one of "EAST US", "NORTH CENTRAL US", "SOUTH CENTRAL US", "SOUTHEAST ASIA", "WEST EUROPE"
 	New-AzureRmResourceGroupDeployment -DeploymentName "gadeploy" -ResourceGroupName $azureRGName -TemplateFile "azuredeploy.json"
     ```
 

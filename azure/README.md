@@ -43,7 +43,7 @@ The following procedure will create a new Resource Group with a Storage Account,
 - In the next screen:
     * For Subscription: Select your subscription
 	* For Resource group: Select **Create new**, then enter a name (for example, teradici_pcoip)
-	* For Location: Select a location from one of **"EAST US", "NORTH CENTRAL US", "SOUTH CENTRAL US"**
+	* For Location: Select a location from one of **"EAST US", "NORTH CENTRAL US", "SOUTH CENTRAL US", "SOUTHEAST ASIA", "WEST EUROPE"**
 	* For Admin User: Enter a user name (Note: the user name cannot be 'Admin'; the user name and password will be used later to establish the PCoIP session)
 	* For Admin Password: Enter a password
 	* For Registration Code: Enter the Registration Code you obtained from Teradici
