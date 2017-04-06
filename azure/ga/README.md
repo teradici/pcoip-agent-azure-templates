@@ -10,7 +10,7 @@
 	  * 60443 TCP (for PCoIP diagnostics)
 	  * 4172 TCP and UDP (for PCoIP sessions)
 	* A Windows Server 2016 VM
-	* Teradici PCoIP Standard Agent 2.8
+	* Teradici PCoIP Graphics Agent 2.8 for Windows
 	* NVIDIA GRID 4.2 (369.95) Video Driver
 
 ### Structure of the templates
