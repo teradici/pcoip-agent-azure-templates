@@ -41,7 +41,7 @@
     "subnetName": "agentVM-subnet",
     "vmNamePrefix": "agentVM",
     "nsgName": "pcoip-agent-nsg",
-    "agentUrl": "https://binarystore.blob.core.windows.net/agents/2.8/PCoIP_agent_release_installer_2.8.0.5813_graphics.exe",
+    "agentUrl": "https://binarystore.blob.core.windows.net/agents/2.8/PCoIP_agent_release_installer_2.8.0.6123_graphics.exe",
     "nvidiaDriverUrl": "https://binarystore.blob.core.windows.net/thirdparty/nvidia/369.95_grid_win10_server2016_64bit_international.exe"
   },
   "resources": [
