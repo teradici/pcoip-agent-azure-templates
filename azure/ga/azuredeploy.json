@@ -184,7 +184,7 @@
           "vmName": {
             "value": "[variables('vmNamePrefix')]"
           },
-          "gaSourceUrl": {
+          "agentSourceUrl": {
             "value": "[variables('agentUrl')]"
           },
           "nvidiaSourceUrl": {
