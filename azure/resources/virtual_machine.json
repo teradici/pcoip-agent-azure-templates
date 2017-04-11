@@ -35,9 +35,8 @@
     },
     "vmSize": {
       "type": "string",
-      "defaultValue": "Standard_NV6",
       "metadata": {
-        "description": "Virtual Machine Size. Minimum Standard_NV6 for GPU-enabled instances"
+        "description": "Virtual Machine Size."
       }
     },
     "nicName": {
