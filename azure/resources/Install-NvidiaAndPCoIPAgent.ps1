@@ -12,11 +12,11 @@ Configuration InstallPCoIPAgent
      	[PSCredential] $registrationCodeCredential
 	)
     
-    $isGA = $nvidiaSourceUrl -ne $null
-    $regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\PCoIP Standard Agent"
-
-    if ($isGA) {
+    $isSA = $nvidiaSourceUrl -eq $null
         $regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\PCoIP Graphics Agent"
+
+    if ($isSA) {
+        $regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\PCoIP Standard Agent"
     }
 	
     Node "localhost"
@@ -33,60 +33,46 @@ Configuration InstallPCoIPAgent
             DestinationPath = "C:\WindowsAzure\PCoIPAgentInstaller"
         }
 
-        if ($isGA) {
-            File Nvidia_Download_Directory 
-            {
-                Ensure          = "Present"
-                Type            = "Directory"
-                DestinationPath = "C:\WindowsAzure\NvidiaInstaller"
+        File Nvidia_Download_Directory 
+        {
+            Ensure          = "Present"
+            Type            = "Directory"
+            DestinationPath = "C:\WindowsAzure\NvidiaInstaller"
+        }
+
+        Script InstallNvidiaDriver
+        {
+            DependsOn  = "[File]Nvidia_Download_Directory"
+
+            GetScript  = { @{ Result = "Install_Nvidia" } }
+
+            TestScript = {
+                $isSA = $using:isSA
+
+                if ($isSA -or (Test-Path -path "HKLM:\SOFTWARE\NVIDIA Corporation\Installer2\Drivers")) {
+					return $true
+				}else {
+					return $false
+				} 
+			}
+
+            SetScript  = {
+                Write-Verbose "Downloading Nvidia driver"
+                $nvidiaSourceUrl = $using:nvidiaSourceUrl
+                $installerFileName = [System.IO.Path]::GetFileName($nvidiaSourceUrl)
+                $destFile = "c:\WindowsAzure\NvidiaInstaller\" + $installerFileName
+                Invoke-WebRequest $nvidiaSourceUrl -OutFile $destFile
+
+                Write-Verbose "Installing Nvidia driver"
+                $ret = Start-Process -FilePath $destFile -ArgumentList "/s" -PassThru -Wait
+				if ($ret.ExitCode -ne 0) {
+					$errMsg = "Failed to install nvidia driver. Exit Code: " + $ret.ExitCode
+					Write-Verbose $errMsg
+					throw $errMsg
+				}
+
+                Write-Verbose "Finished Nvidia driver Installation"
             }
-
-            Script InstallNvidiaDriver
-            {
-                DependsOn  = "[File]Nvidia_Download_Directory"
-
-                GetScript  = { @{ Result = "Install_Nvidia" } }
-
-                TestScript = {
-				    if ( Test-Path -path "HKLM:\SOFTWARE\NVIDIA Corporation\Installer2\Drivers")  {
-					    return $true
-				    }else {
-					    return $false
-				    } 
-			    }
-
-                SetScript  = {
-                    Write-Verbose "Downloading Nvidia driver"
-                    $nvidiaSourceUrl = $using:nvidiaSourceUrl
-                    $installerFileName = [System.IO.Path]::GetFileName($nvidiaSourceUrl)
-                    $destFile = "c:\WindowsAzure\NvidiaInstaller\" + $installerFileName
-                    Invoke-WebRequest $nvidiaSourceUrl -OutFile $destFile
-
-                    Write-Verbose "Installing Nvidia driver"
-                    $ret = Start-Process -FilePath $destFile -ArgumentList "/s" -PassThru -Wait
-				    if ($ret.ExitCode -ne 0) {
-					    $errMsg = "Failed to install nvidia driver. Exit Code: " + $ret.ExitCode
-					    Write-Verbose $errMsg
-					    throw $errMsg
-				    }
-
-                    Write-Verbose "Finished Nvidia driver Installation"
-                }
-            }
-        } else {
-            Script InstallNvidiaDriver
-            {
-
-                GetScript  = { @{ Result = "dummy" } }
-
-                TestScript = {
-				    return $true
-			    }
-
-                SetScript  = {
-                    #noting to do
-                }
-            }        
         }
 
         Script Install_PCoIPAgent
@@ -141,7 +127,19 @@ Configuration InstallPCoIPAgent
             DependsOn  = @("[Script]Install_PCoIPAgent")
 
             GetScript  = { return 'registration'}
-            TestScript = { return $false}
+            
+            TestScript = { 
+                cd "C:\Program Files (x86)\Teradici\PCoIP Agent"
+ 	            $ret = & .\pcoip-validate-license.ps1
+				$isExeSucc = $?
+
+				if ($isExeSucc) {
+					return $true
+				}
+
+                return $false
+            }
+
             SetScript  = {
                 #register code is stored at the password property of PSCredential object
                 $registrationCode = ($using:registrationCodeCredential).GetNetworkCredential().password
