@@ -47,13 +47,13 @@ Deployment will now start and may take up to 15 minutes to complete.
 Once deployment is complete, to connect to your deployed Teradici PCoIP agent find the IP address:
 * Log in to the [Azure Portal](https://portal.azure.com/).
 * Click *Resource groups*, find the resource group you created during deployment, and select it.
-* Click the *Public IP address* resource (named *pcoip-agent-pip*) to obtain the IP address for the PCoIP Agent.
+* Click the *Public IP address* resource (named *pcoip-agent-pip*) to obtain the IP address.
 
 From the Teradici PCoIP client, enter the IP address to establish a connection to the Teradici PCoIP agent you deployed on Azure.
 
 ## Delete the PCoIP Agent
 
-When you are finished using the Teradici PCoIP agent (and in order to avoid unwanted charges), use these steps to remove the Teradici PCoIP Standard or Graphics agent (and all associated resources) from your Microsoft Azure subscription:
+When you are finished using the Teradici PCoIP agent (and in order to avoid unwanted charges), use these steps to remove the Teradici PCoIP agent (and all associated resources) from your Microsoft Azure subscription:
 * Log in to the [Azure Portal](https://portal.azure.com/) and click *Resource groups*.
 * Find and right-click the resource group name you created and choose **Delete**.
 * Enter the resource group name when prompted and click **Delete**.
