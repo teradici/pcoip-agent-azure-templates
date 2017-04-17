@@ -45,7 +45,7 @@
             }
           },
           {
-            "name": "pcoip-rule-1",
+            "name": "pcoip-agent-broker-rule",
             "properties": {
               "description": "Allow PCoIP Broker Protocol",
               "protocol": "Tcp",
@@ -59,7 +59,7 @@
             }
           },
           {
-            "name": "pcoip-rule-2",
+            "name": "pcoip-agent-session-rule",
             "properties": {
               "description": "Allow PCoIP Session",
               "protocol": "*",
@@ -73,7 +73,7 @@
             }
           },
           {
-            "name": "pcoip-rule-3",
+            "name": "pcoip-agent-diagnostics-rule",
             "properties": {
               "description": "Allow PCoIP Diagnostics Traffic",
               "protocol": "Tcp",

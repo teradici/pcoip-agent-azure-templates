@@ -4,7 +4,7 @@
   "parameters" : {
     "vnetName": {
       "type": "string",
-      "defaultValue": "pcoip-vnet",
+      "defaultValue": "pcoip-agent-vnet",
       "metadata": {
         "description": "Name of the Virtual Network.",
         "minLength": 2,
@@ -20,7 +20,7 @@
     },
     "subnetName": {
       "type": "string",
-      "defaultValue": "stdAgentVM-subnet",
+      "defaultValue": "pcoip-agent-subnet",
       "metadata": {
         "description": "Name of the agent subnet."
       }

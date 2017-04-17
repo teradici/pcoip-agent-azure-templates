@@ -36,11 +36,12 @@
   },
   "variables": {
     "deploymentApiVersion": "2016-09-01",
-    "storageName": "[replace(replace(tolower(concat('pcagent', uniquestring(resourceGroup().id))), '-',''),'.','')]",
-    "vnetName": "pcoip-vnet",
-    "subnetName": "agentVM-subnet",
-    "vmNamePrefix": "agentVM",
-    "nsgName": "pcoip-agent-nsg",
+    "namePrefix": "pcoip-agent",
+    "storageAccountName": "[replace(replace(tolower(concat(variables('namePrefix'), uniquestring(resourceGroup().id))), '-',''),'.','')]",
+    "vnetName": "[concat(variables('namePrefix'), '-vnet')]",
+    "subnetName": "[concat(variables('namePrefix'), '-subnet')]",
+    "vmNamePrefix": "[concat(variables('namePrefix'), '-vm')]",
+    "nsgName": "[concat(variables('namePrefix'), '-nsg')]",
     "agentUrl": "https://binarystore.blob.core.windows.net/agents/2.8/PCoIP_agent_release_installer_2.8.0.6123_graphics.exe",
     "nvidiaDriverUrl": "https://binarystore.blob.core.windows.net/thirdparty/nvidia/369.95_grid_win10_server2016_64bit_international.exe"
   },
@@ -57,7 +58,7 @@
         },
         "parameters": {
           "storageAccountName": {
-            "value": "[variables('storageName')]"
+            "value": "[variables('storageAccountName')]"
           }
         }
       }
@@ -117,8 +118,8 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "vmName": {
-            "value": "[variables('vmNamePrefix')]"
+          "namePrefix": {
+            "value": "[variables('namePrefix')]"
           },
           "nsgName": {
             "value": "[variables('nsgName')]"
@@ -164,7 +165,7 @@
             "value": "[reference('depolyNIC').outputs.nicName.value]"
           },
           "storageAccountName": {
-            "value": "[variables('storageName')]"
+            "value": "[variables('storageAccountName')]"
           }
         }
       }
