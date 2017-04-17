@@ -1,83 +1,74 @@
-# Under Development
+# Deploying a Teradici PCoIP Agent on Microsoft Azure
 
-# How to Deploy Teradici PCoIP Agent Software on Microsoft Azure
+Use these steps to deploy a Virtual Machine on Azure, running Windows Server 2016, and the latest (v2.8) Teradici PCoIP Standard or Graphics agent. 
 
-The following procedure will create a new Resource Group with a Storage Account, a VNet, and a Microsoft Windows Server 2016 VM (with Teradici PCoIP Agent Software installed) in your Microsoft Azure account.
+All necessary resources required to run the Teradici PCoIP agent will be created and configured in your Azure subscription under a new resource group.
 
-### What you need before starting the deployment
+Once deployed you will be able to connect to the Teradici PCoIP agent using the Teradici PCoIP client.
 
-- A Microsoft Azure account
-    * To create a free Microsoft Azure account, go to [https://azure.microsoft.com/free/](https://azure.microsoft.com/free/)
-	* If you are using an existing Microsoft Azure account, make sure you have permissions to create new resource groups and resources.
-- A Registration Code for Teradici PCoIP Standard Agent
-    * To obtain a Registration Code for Teradici PCoIP Agent, go to [todo](todo)
-- Teradici PCoIP Client
-    * To download Teradici PCoIP Client, go to [http://www.teradici.com/product-finder/client-downloads](http://www.teradici.com/product-finder/client-downloads)	
+## Before You Begin
 
-### To deploy
+* Setup a Microsoft Azure account and ensure you have permissions to create new resource groups and resources. If you don't already have an account, you can sign up for a [free Microsoft Azure account](https://azure.microsoft.com/free/). 
+* Obtain a [Registration code](http://connect.teradici.com/cas-trial) for a Teradici PCoIP Standard or Graphics agent.
+* Download and install the [Teradici PCoIP Client](http://www.teradici.com/product-finder/client-downloads).
 
-- Click the following button to deploy **standard** agent:
+## Deploy the PCoIP Agent
 
-<a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fdevtemplatestore.blob.core.windows.net%2Ftemplates%2Fmaster%2Fdeployments%2Fazure%2Fsa%2Fazuredeploy.json">
-    <img src="http://azuredeploy.net/deploybutton.png"/>
-</a>
+Choose whether you want to deploy a Teradici PCoIP **Standard** or **Graphics** agent and deploy it to Azure by clicking the Deploy to Azure button.
+   
+* To deploy a Teradici PCoIP **Standard** agent, on a [Standard_D2_v2](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general) type virtual machine, click
+    
+    <a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fdevtemplatestore.blob.core.windows.net%2Ftemplates%2Fmaster%2Fdeployments%2Fazure%2Fsa%2Fazuredeploy.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
+    
+* To deploy a Teradici PCoIP **Graphics** agent, on a [NV6](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-gpu) type virtual machine, click
 
-- In the Microsoft Azure login page, enter your account credentials and click **Sign in** button.
-- In the next screen:
-    * For Subscription: Select your subscription
-	* For Resource group: Select **Create new**, then enter a name (for example, teradici_pcoip)
-	* For Location: Select a location
-	* For Admin User: Enter a user name (Note: the user name cannot be 'Admin'; the user name and password will be used later to establish the PCoIP session)
-	* For Admin Password: Enter a password
-	* For Registration Code: Enter the Registration Code you obtained from Teradici
-	* Check the checkbox **I agree to the terms and conditions stated above** and click **Purchase** (Note: You will be charged by Microsoft to your Azure account for this deployment. For more information, go to [https://azure.microsoft.com/pricing/](https://azure.microsoft.com/pricing/)
-- The deployment will now start, which will take about 15 minutes to complete.
+    <a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fdevtemplatestore.blob.core.windows.net%2Ftemplates%2Fmaster%2Fdeployments%2Fazure%2Fga%2Fazuredeploy.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
 
-- Click the following button to deploy **graphics** agent:
+Now follow the steps below:
 
-<a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fdevtemplatestore.blob.core.windows.net%2Ftemplates%2Fmaster%2Fdeployments%2Fazure%2Fga%2Fazuredeploy.json">
-    <img src="http://azuredeploy.net/deploybutton.png"/>
-</a>
+* When prompted by the Azure portal, enter you Azure credentials.
+* When presented with the Azure Custom deployment screen, set these options
+    * *Subscription:* Select your subscription.
+    * *Resource group:* Select *Create new*, then enter a resource group name (for example *teradici_trial*).
+    * *Location:* Select a location. 
+        * Note: Teradici PCoIP Graphics agent deployments require locations that support NV instance types, currently this is limited to the following locations: EAST US, NORTH CENTRAL US, SOUTH CENTRAL US, SOUTHEAST ASIA, or WEST EUROPE.
+    * *Admin User:* Enter a username for your PCoIP session connection login. Do not use Admin.
+    * *Admin Password:* Enter a password.
+    * *Registration Code:* Enter the Registration code you received from Teradici.
+* Review the Terms and Conditions. Indicate your agreement by selecting *I agree to the terms and conditions stated above*.
+* Enable *Pin to Dashboard* to monitor the status of your deployment.
+* Click **Purchase**
+    *  Note: regular Azure charges will apply to your existing Microsoft Azure subscription for this deployment. For details, refer to the [Azure Pricing Guide](https://azure.microsoft.com/pricing/).
 
-- In the Microsoft Azure login page, enter your account credentials and click **Sign in** button.
-- In the next screen:
-    * For Subscription: Select your subscription
-	* For Resource group: Select **Create new**, then enter a name (for example, teradici_pcoip)
-	* For Location: Select a location from one of **"EAST US", "NORTH CENTRAL US", "SOUTH CENTRAL US", "SOUTHEAST ASIA", "WEST EUROPE"**
-	* For Admin User: Enter a user name (Note: the user name cannot be 'Admin'; the user name and password will be used later to establish the PCoIP session)
-	* For Admin Password: Enter a password
-	* For Registration Code: Enter the Registration Code you obtained from Teradici
-	* Check the checkbox **I agree to the terms and conditions stated above** and click **Purchase** (Note: You will be charged by Microsoft to your Azure account for this deployment. For more information, go to [https://azure.microsoft.com/pricing/](https://azure.microsoft.com/pricing/)
-- The deployment will now start, which will take about 15 minutes to complete.
-	
-### After the deployment is complete
+Deployment will now start and may take up to 15 minutes to complete.
 
-- Find out the public IP address of the Teradici PCoIP Standard Agent:
-    * Log in to [https://portal.azure.com](https://portal.azure.com) using your account credentials.
-	* Click **Resource groups**.
-	* Find the resource group with the name you entered during the deployment, click on it.
-	* Click the **Public IP address** resource. You will be shown the IP Address.
-- Connect Teradici PCoIP Client to the Teradici PCoIP Standard Agent:
-	* Using the IP address found in the previous step, you can now connect Teradici PCoIP Client to the Teradici PCoIP Agent.
+## Connect to the PCoIP Agent
 
-### What you need to do after usage
+Once deployment is complete, to connect to your deployed Teradici PCoIP agent find the IP address:
+* Log in to the [Azure Portal](https://portal.azure.com/).
+* Click *Resource groups*, find the resource group you created during deployment, and select it.
+* Click the *Public IP address* resource (named *pcoip-agent-pip*) to obtain the IP address for the PCoIP Agent.
 
-- Delete the Teradici PCoIP agent deployment from your Microsoft Azure account (Note: You will be continued to be charged by Microsoft to your Azure account otherwise):
-    * Log in to [https://portal.azure.com](https://portal.azure.com) using your account credentials.
-    * Click **Resource groups**.
-    * Find the resource group name you entered during the deployment, right-click on it, then select **Delete**.
-    * You will be prompted to type the resource group name. Type it and click **Delete**.
+From the Teradici PCoIP client, enter the IP address to establish a connection to the Teradici PCoIP agent you deployed on Azure.
 
-### Additional information
-  * [Teradici Cloud Access Software](http://www.teradici.com/products-and-solutions/pcoip-products/cloud-access-software)
-  * [*Teradici PCoIP Standard Agent Administrators' Guide*](http://www.teradici.com/web-help/ter1505006/2.7/)
-  * [*Teradici PCoIP Graphics Agent Administrators' Guide*][to do]
-  * [Teradici Community Forum](https://communities.teradici.com/)
-  
-### Credit
-  * Some content of this artcle is based off of the Azure Quickstart Templates, copyright (c) Microsoft Azure, with the following license: https://github.com/Azure/azure-quickstart-templates/blob/master/LICENSE
+## Delete the PCoIP Agent
 
-  
+When you are finished using the Teradici PCoIP agent (and in order to avoid unwanted charges), use these steps to remove the Teradici PCoIP Standard or Graphics agent (and all associated resources) from your Microsoft Azure subscription:
+* Log in to the [Azure Portal](https://portal.azure.com/) and click *Resource groups*.
+* Find and right-click the resource group name you created and choose **Delete**.
+* Enter the resource group name when prompted and click **Delete**.
+
+## More Information
+
+* [Teradici Cloud Access Software](http://www.teradici.com/products-and-solutions/pcoip-products/cloud-access-software)
+* [Teradici Cloud Access Software documentation (v2.8)](https://techsupport.teradici.com/ics/support/kbanswer.asp?deptID=15164&task=knowledge&questionID=3090) which includes release notes, quick start guides, etc...
+* [Teradici Technical Support](https://techsupport.teradici.com)
+* [Teradici Community Forum](https://communities.teradici.com/topics/cloud+access+software.html)
+
+## Credits
+
+* Some content in this article is based on the Azure quick start Templates, © Microsoft Azure, with the [following license](https://github.com/Azure/azure-quickstart-templates/blob/master/LICENSE).
+
 <p>&nbsp;</p>
+© 2017 Teradici Corporation. All Rights Reserved.
 <p>&nbsp;</p>
-Copyright 2017 Teradici Corporation. All Rights Reserved.
