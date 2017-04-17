@@ -4,7 +4,7 @@
   "parameters" : {
     "vmNamePrefix": {
       "type": "string",
-      "defaultValue": "agentVM",      
+      "defaultValue": "pcoip-agent-vm",      
       "metadata": {
         "description": "Virtual Machine Name prefix"
       }
@@ -62,8 +62,6 @@
       "adminUser": "[parameters('adminUser')]",
       "adminPassword": "[parameters('adminPassword')]",
       "vmSize": "[parameters('vmSize')]",
-      "osDiskPrefix": "os_disk",
-      "dataDiskPrefix": "data_disk",
       "nicName": "[parameters('nicName')]",
       "os": "[variables('osSettings')[parameters('osType')]]"
     },
@@ -94,7 +92,7 @@
             "version": "[variables('vmSettings').os.version]"
           },
           "osDisk": {
-            "name": "osdisk",
+            "name": "pcoip-agent-disk",
             "caching": "ReadWrite",
             "createOption": "FromImage"
           }
