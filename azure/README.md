@@ -54,12 +54,12 @@ Once deployment is complete, to connect to your deployed Teradici PCoIP agent fi
 * Click the *Public IP address* resource (named *pcoip-agent-pip*) to obtain the IP address.
 
 From the Teradici PCoIP client, establish a connection to the virtual machine with the Teradici PCoIP agent you deployed on Azure:
-* Launch the PCoIP client and enter the IP address obtained above in the *Host Address* field, and click **Next**.
+* Launch the Teradici PCoIP client and enter the IP address obtained above in the *Host Address* field, and click **Next**.
 * Enter the *Admin User* and *Password* credentials created above and login to the virtual machine.
 * You now have access to a PCoIP cloud-delivered desktop.
 
-### Known Issue(s)
-* Intial connections to a newly deployed Teradici PCoIP **Graphics** agent, in Windowed mode, may result in a black screen. To clear the black screen, resize the window or connect in Full Screen mode.
+#### Known Issue(s)
+* Intial, Windowed mode, connections to a newly deployed Teradici PCoIP **Graphics** agent, may result in a black screen. To clear the black screen, resize the window or connect in Full Screen mode.
 
 ## Delete the PCoIP Agent
 
