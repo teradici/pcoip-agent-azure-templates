@@ -26,7 +26,7 @@ By clicking one of the *Deploy to Azure* buttons below you accept the terms of t
 
     <a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fdevtemplatestore.blob.core.windows.net%2Ftemplates%2Fmaster%2Fdeployments%2Fazure%2Fga%2Fazuredeploy.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
 
-\* See [Azure Pricing Guide](https://azure.microsoft.com/pricing/details/virtual-machines/windows/) for the relevant virtual machine types.
+\* See the [Azure Pricing Guide](https://azure.microsoft.com/pricing/details/virtual-machines/windows/) for estimated virtual machine pricing.
 
 Next follow these steps:
 
