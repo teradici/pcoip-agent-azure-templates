@@ -37,7 +37,6 @@
   "variables": {
     "deploymentApiVersion": "2016-09-01",
     "namePrefix": "pcoip-agent",
-    "storageAccountName": "[replace(replace(tolower(concat(variables('namePrefix'), uniquestring(resourceGroup().id))), '-',''),'.','')]",
     "vnetName": "[concat(variables('namePrefix'), '-vnet')]",
     "subnetName": "[concat(variables('namePrefix'), '-subnet')]",
     "vmNamePrefix": "[concat(variables('namePrefix'), '-vm')]",
@@ -45,24 +44,6 @@
     "agentUrl": "https://binarystore.blob.core.windows.net/agents/2.8/PCoIP_agent_release_installer_2.8.0.5813_standard.exe"
   },
   "resources": [
-    {
-      "type": "Microsoft.Resources/deployments",
-      "name": "deploySA",
-      "apiVersion": "[variables('deploymentApiVersion')]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), '/resources/', 'storage_account.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "storageAccountName": {
-            "value": "[variables('storageAccountName')]"
-          }
-        }
-      }
-    },
-
     {
       "type": "Microsoft.Resources/deployments",
       "name": "depolyAgentNsg",
@@ -138,7 +119,6 @@
       "name": "deployVM",
       "apiVersion": "[variables('deploymentApiVersion')]",
       "dependsOn": [
-        "deploySA",
         "depolyNIC"
       ],
       "properties": {
@@ -159,9 +139,6 @@
           },
           "nicName": {
             "value": "[reference('depolyNIC').outputs.nicName.value]"
-          },
-          "storageAccountName": {
-            "value": "[variables('storageAccountName')]"
           }
         }
       }
