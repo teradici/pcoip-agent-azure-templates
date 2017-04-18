@@ -27,12 +27,6 @@
         "description": "Type of OS to use for VMs: Windows."
       }
     },
-    "storageAccountName": {
-      "type": "string",
-      "metadata": {
-        "description": "Storage Account Name"
-      }
-    },
     "vmSize": {
       "type": "string",
       "metadata": {
@@ -64,9 +58,7 @@
       "vmSize": "[parameters('vmSize')]",
       "nicName": "[parameters('nicName')]",
       "os": "[variables('osSettings')[parameters('osType')]]"
-    },
-
-    "storageUrl": "[concat('http://', parameters('storageAccountName'), '.blob.core.windows.net')]"
+    }
   },
 
   "resources": [
@@ -95,12 +87,6 @@
             "name": "pcoip-agent-disk",
             "caching": "ReadWrite",
             "createOption": "FromImage"
-          }
-        },
-        "diagnosticsProfile": {
-          "bootDiagnostics": {
-            "enabled": true,
-            "storageUri": "[variables('storageUrl')]"
           }
         },
         "networkProfile": {
