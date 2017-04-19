@@ -40,7 +40,7 @@
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "depolyAgent",
+      "name": "deployAgent",
       "apiVersion": "[variables('deploymentApiVersion')]",
       "properties": {
         "mode": "Incremental",
@@ -75,7 +75,7 @@
   "outputs": {
     "vm_fqdn": {
       "type": "string",
-      "value": "[reference('depolyAgent').outputs.vm_fqdn.value]"
+      "value": "[reference('deployAgent').outputs.vm_fqdn.value]"
     }
   }
 }

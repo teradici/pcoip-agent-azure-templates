@@ -23,7 +23,7 @@
       "type": "securestring",
       "minLength": 21,
       "metadata": {
-        "description": "PCoIP Standard Agent License Registration Code."
+        "description": "PCoIP Graphics Agent License Registration Code."
       }
     },       
     "_artifactsLocation": {
@@ -40,7 +40,7 @@
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "depolyAgent",
+      "name": "deployAgent",
       "apiVersion": "[variables('deploymentApiVersion')]",
       "properties": {
         "mode": "Incremental",
@@ -78,7 +78,7 @@
   "outputs": {
     "vm_fqdn": {
       "type": "string",
-      "value": "[reference('depolyAgent').outputs.vm_fqdn.value]"
+      "value": "[reference('deployAgent').outputs.vm_fqdn.value]"
     }
   }
 }

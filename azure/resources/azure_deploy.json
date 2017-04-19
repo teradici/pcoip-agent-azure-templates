@@ -84,7 +84,7 @@
 
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "depolyVNet",
+      "name": "deployVNet",
       "apiVersion": "[variables('deploymentApiVersion')]",
       "properties": {
         "mode": "Incremental",
@@ -105,11 +105,11 @@
 
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "depolyNIC",
+      "name": "deployNIC",
       "apiVersion": "[variables('deploymentApiVersion')]",
       "dependsOn": [
         "deployNsg",
-        "depolyVNet"
+        "deployVNet"
       ],
       "properties": {
         "mode": "Incremental",
@@ -139,7 +139,7 @@
       "name": "deployVM",
       "apiVersion": "[variables('deploymentApiVersion')]",
       "dependsOn": [
-        "depolyNIC"
+        "deployNIC"
       ],
       "properties": {
         "mode": "Incremental",
@@ -161,7 +161,7 @@
             "value": "[parameters('vmSize')]"
           },
           "nicName": {
-            "value": "[reference('depolyNIC').outputs.nicName.value]"
+            "value": "[reference('deployNIC').outputs.nicName.value]"
           }
         }
       }
@@ -204,7 +204,7 @@
   "outputs": {
     "vm_fqdn": {
       "type": "string",
-      "value": "[reference('depolyNIC').outputs.vm_fqdn.value]"
+      "value": "[reference('deployNIC').outputs.vm_fqdn.value]"
     }
   }
 }
