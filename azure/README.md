@@ -12,7 +12,7 @@ Once deployed you will be able to connect to the Teradici PCoIP agent using the 
 * Use an existing or [trial](http://connect.teradici.com/cas-trial) Registration code for a Teradici PCoIP Standard or Graphics agent.
 * Download and install the [Teradici PCoIP Client](http://www.teradici.com/product-finder/client-downloads).
 
-## Deploy a PCoIP Agent
+## Deploy the PCoIP Agent
 
 Choose whether you want to deploy a Teradici PCoIP Standard or Graphics agent and deploy it to Azure by clicking the *Deploy to Azure* button.
 
