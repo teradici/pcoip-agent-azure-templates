@@ -36,7 +36,7 @@
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "The URL from which video driver for virtual machine will be downloaded. Only Graphic Workstation is required."
+        "description": "The URL from which video driver for virtual machine will be downloaded, only required for the Graphics Agent."
       }
     },
     "pcoipAgentInstallerUrl": {
@@ -48,7 +48,7 @@
     },
     "_artifactsLocation": {
       "type": "string",
-      "defaultValue": "https://devtemplatestore.blob.core.windows.net/templates/master/deployments/azure",
+      "defaultValue": "https://devtemplatestore.blob.core.windows.net/templates/master/deployments",
       "metadata": {
         "description": "The base location of resources, such as templates and DSC modules, that the template depends on"
       }

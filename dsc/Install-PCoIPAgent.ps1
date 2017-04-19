@@ -66,8 +66,8 @@ Configuration InstallPCoIPAgent
                 Invoke-WebRequest $videoDriverUrl -OutFile $destFile
 
                 Write-Verbose "Installing Nvidia driver"
-                $ret = Start-Process -FilePath $destFile -ArgumentList "/s" -PassThru -Wait
-                Write-Verbose "Nvidia driver exit code: "  + $ret.ExitCode
+                $ret = Start-Process -FilePath $destFile -ArgumentList "/s /noeula /noreboot" -PassThru -Wait
+                Write-Verbose ("Nvidia driver exit code: "  + $ret.ExitCode)
 
                 # treat returned code 0 and 1 as success
 				if (($ret.ExitCode -ne 0) -and ($ret.ExitCode -ne 1)) {
@@ -76,6 +76,10 @@ Configuration InstallPCoIPAgent
 					$errMsg = "Failed to install nvidia driver. standard output: " + $stdout + "; standard error: " + $stderr
 					Write-Verbose $errMsg
 					throw $errMsg
+				} else {
+					Write-Verbose "Request reboot machine after Installing Video Driver."
+					# Setting the global:DSCMachineStatus = 1 tells DSC that a reboot is required
+					$global:DSCMachineStatus = 1
 				}
 
                 Write-Verbose "Finished Nvidia driver Installation"
@@ -112,18 +116,21 @@ Configuration InstallPCoIPAgent
 
                 #install the agent
 				Write-Verbose "Installing PCoIP Agent"
-                $ret = Start-Process -FilePath $destFile -ArgumentList "/S" -PassThru -Wait
+                $ret = Start-Process -FilePath $destFile -ArgumentList "/S /nopostreboot" -PassThru -Wait
 
 				# Check installer return code
 				if ($ret.ExitCode -ne 0) {
 					#exit code 1641 means requiring reboot machine after intallation is done, other non zere exit code means installation has some error
-					if ($ret.ExitCode -ne $EXIT_CODE_REBOOT) {
+					if ($ret.ExitCode -eq $EXIT_CODE_REBOOT) {
+						Write-Verbose "Request reboot machine after Installing pcoip agent."
+						# Setting the global:DSCMachineStatus = 1 tells DSC that a reboot is required
+						$global:DSCMachineStatus = 1
+					} else {
 						$errMsg = "Failed to install PCoIP Agent. Exit Code: " + $ret.ExitCode
 						Write-Verbose $errMsg
 						throw $errMsg
 					}
 				}
-
 				
 	            Write-Verbose "Finished PCoIP Agent Installation"
             }
@@ -138,13 +145,9 @@ Configuration InstallPCoIPAgent
             TestScript = { 
                 cd "C:\Program Files (x86)\Teradici\PCoIP Agent"
  	            $ret = & .\pcoip-validate-license.ps1
-				$isExeSucc = $?
 
-				if ($isExeSucc) {
-					return $true
-				}
-
-                return $false
+				# the powershell variable $? to indicate the last executing command status
+				return $?
             }
 
             SetScript  = {
