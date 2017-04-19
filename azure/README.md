@@ -63,7 +63,7 @@ From the Teradici PCoIP client, establish a connection to the virtual machine wi
 * You now have access to a PCoIP cloud-delivered desktop.
 
 #### Known Issue(s)
-* Intial, Windowed mode, connections to a newly deployed Teradici PCoIP **Graphics** agent, may result in a blank screen. To clear the blank screen, resize the window or connect in Full Screen mode.
+* Initial, Windowed mode, connections to a newly deployed Teradici PCoIP **Graphics** agent, may result in a blank screen. To clear the blank screen, resize the window or connect in Full Screen mode.
 
 ## Delete the PCoIP Agent
 
