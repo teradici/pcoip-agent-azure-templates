@@ -12,21 +12,24 @@ Once deployed you will be able to connect to the Teradici PCoIP agent using the 
 * Use an existing or [trial](http://connect.teradici.com/cas-trial) Registration code for a Teradici PCoIP Standard or Graphics agent.
 * Download and install the [Teradici PCoIP Client](http://www.teradici.com/product-finder/client-downloads).
 
-## Deploy the PCoIP Agent
+## Deploy a PCoIP Agent
 
 Choose whether you want to deploy a Teradici PCoIP Standard or Graphics agent and deploy it to Azure by clicking the *Deploy to Azure* button.
 
-By clicking one of the *Deploy to Azure* buttons below you accept the terms of the Teradici Cloud Access Software [End User License Agreement](http://www.teradici.com/pdf/teradici-cloud-access-software-eula.pdf).
+By clicking one of the *Deploy to Azure* buttons below you accept the terms of the Teradici Cloud Access Software [End User License Agreement](http://www.teradici.com/pdf/teradici-cloud-access-software-eula.pdf) and by clicking the *Deploy to Azure* button to deploy a Teradici PCoIP Graphics agent on a NV instance type virtual machine, you have read and agree to be bound by the [software license](http://www.nvidia.com/content/DriverDownload-March2009/licence.php?lang=us) for use of the third-party drivers.
    
-* To deploy a Teradici PCoIP **Standard** agent, on a [Standard_D2_v2](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general)\* type virtual machine, click
-    
-    <a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fdevtemplatestore.blob.core.windows.net%2Ftemplates%2Fmaster%2Fdeployments%2Fazure%2Fsa%2Fazuredeploy.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
-    
-* To deploy a Teradici PCoIP **Graphics** agent, on a [NV6](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-gpu)\* type virtual machine, click
+#### Teradici PCoIP Standard agent
 
-    <a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fdevtemplatestore.blob.core.windows.net%2Ftemplates%2Fmaster%2Fdeployments%2Fazure%2Fga%2Fazuredeploy.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
+To deploy a Teradici PCoIP **Standard** agent, on a [Standard_D2_v2](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general)\* type virtual machine, click
+    
+<a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fdevtemplatestore.blob.core.windows.net%2Ftemplates%2Fmaster%2Fdeployments%2Fazure%2Fsa%2Fazuredeploy.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
 
-\* See the [Azure Pricing Guide](https://azure.microsoft.com/pricing/details/virtual-machines/windows/) for estimated virtual machine pricing.
+#### Teradici PCoIP Graphics agent
+
+To deploy a Teradici PCoIP **Graphics** agent, on a [NV6](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-gpu)\* type virtual machine, click
+
+<a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fdevtemplatestore.blob.core.windows.net%2Ftemplates%2Fmaster%2Fdeployments%2Fazure%2Fga%2Fazuredeploy.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
+
 
 Next follow these steps:
 
@@ -40,11 +43,12 @@ Next follow these steps:
     * *Admin Password:* Enter a password.
     * *Registration Code:* Enter the Registration code you received from Teradici.
 * Review the Microsoft Terms and Conditions. Indicate your agreement by selecting *I agree to the terms and conditions stated above*.
-* Enable *Pin to Dashboard* if you wish to monitor the status of your deployment from the Azure dashboard.
+* Enable *Pin to dashboard* if you wish to monitor the status of your deployment from the Azure dashboard.
 * Click **Purchase**
-    *  Note: regular Azure charges will apply to your existing Microsoft Azure subscription for this deployment.
 
-Deployment will now start and may take up to 15 minutes to complete. You can track the status of the deployment via the Azure Notifications drop down.
+Deployment will now start and may take up to 15 minutes to complete. You can track the status of the deployment via the Azure Notifications drop down. Regular Azure charges will apply to your Microsoft Azure account for this deployment.
+
+\* See the [Azure Pricing Guide](https://azure.microsoft.com/pricing/details/virtual-machines/windows/) for estimated virtual machine pricing.
 
 ## Connect to the PCoIP Agent
 
@@ -59,7 +63,7 @@ From the Teradici PCoIP client, establish a connection to the virtual machine wi
 * You now have access to a PCoIP cloud-delivered desktop.
 
 #### Known Issue(s)
-* Intial, Windowed mode, connections to a newly deployed Teradici PCoIP **Graphics** agent, may result in a black screen. To clear the black screen, resize the window or connect in Full Screen mode.
+* Intial, Windowed mode, connections to a newly deployed Teradici PCoIP **Graphics** agent, may result in a blank screen. To clear the blank screen, resize the window or connect in Full Screen mode.
 
 ## Delete the PCoIP Agent
 
@@ -77,7 +81,7 @@ When you are finished using the Teradici PCoIP agent (and in order to avoid unwa
 
 ## Credits
 
-* Some content in this article is based on the Azure quick start Templates, © Microsoft Azure, with the [following license](https://github.com/Azure/azure-quickstart-templates/blob/master/LICENSE).
+* Some content in this article is based on the Azure quick start Templates, © Microsoft Azure, licensed under the [MIT license](https://github.com/Azure/azure-quickstart-templates/blob/master/LICENSE).
 
 <p>&nbsp;</p>
 © 2017 Teradici Corporation. All Rights Reserved.
