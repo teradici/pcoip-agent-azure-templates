@@ -1,23 +1,25 @@
-# Install-PCoIPGraphicsAgent.ps1
+# Install-PCoIPAgent.ps1
 Configuration InstallPCoIPAgent
 {
 	param(
      	[Parameter(Mandatory=$true)]
-     	[String] $agentSourceUrl,
+     	[String] $pcoipAgentInstallerUrl,
 
      	[Parameter(Mandatory=$false)]
-     	[String] $nvidiaSourceUrl,
+     	[String] $videoDriverUrl,
     
      	[Parameter(Mandatory=$true)]
      	[PSCredential] $registrationCodeCredential
 	)
     
-    $isSA = $nvidiaSourceUrl -eq $null
-        $regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\PCoIP Graphics Agent"
+    $isSA = [string]::IsNullOrWhiteSpace($videoDriverUrl)
 
-    if ($isSA) {
-        $regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\PCoIP Standard Agent"
-    }
+    $regPath = If ($isSA) {
+				    "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\PCoIP Standard Agent"
+			   }
+			   Else {
+					"HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\PCoIP Graphics Agent"
+			   }
 	
     Node "localhost"
     {
@@ -40,11 +42,11 @@ Configuration InstallPCoIPAgent
             DestinationPath = "C:\WindowsAzure\NvidiaInstaller"
         }
 
-        Script InstallNvidiaDriver
+        Script InstallVideoDriver
         {
             DependsOn  = "[File]Nvidia_Download_Directory"
 
-            GetScript  = { @{ Result = "Install_Nvidia" } }
+            GetScript  = { @{ Result = "Install_Video_Driver" } }
 
             TestScript = {
                 $isSA = $using:isSA
@@ -58,10 +60,10 @@ Configuration InstallPCoIPAgent
 
             SetScript  = {
                 Write-Verbose "Downloading Nvidia driver"
-                $nvidiaSourceUrl = $using:nvidiaSourceUrl
-                $installerFileName = [System.IO.Path]::GetFileName($nvidiaSourceUrl)
+                $videoDriverUrl = $using:videoDriverUrl
+                $installerFileName = [System.IO.Path]::GetFileName($videoDriverUrl)
                 $destFile = "c:\WindowsAzure\NvidiaInstaller\" + $installerFileName
-                Invoke-WebRequest $nvidiaSourceUrl -OutFile $destFile
+                Invoke-WebRequest $videoDriverUrl -OutFile $destFile
 
                 Write-Verbose "Installing Nvidia driver"
                 $ret = Start-Process -FilePath $destFile -ArgumentList "/s" -PassThru -Wait
@@ -82,7 +84,7 @@ Configuration InstallPCoIPAgent
 
         Script Install_PCoIPAgent
         {
-            DependsOn  = @("[File]Agent_Download_Directory","[Script]InstallNvidiaDriver")
+            DependsOn  = @("[File]Agent_Download_Directory","[Script]InstallVideoDriver")
             GetScript  = { @{ Result = "Install_PCoIPAgent" } }
 
             #TODO: Check for other agent types as well?
@@ -101,12 +103,12 @@ Configuration InstallPCoIPAgent
 				#agent installer exit code 1641 require reboot machine
 				Set-Variable EXIT_CODE_REBOOT 1641 -Option Constant
 
-                $agentSourceUrl = $using:agentSourceUrl
-                $installerFileName = [System.IO.Path]::GetFileName($agentSourceUrl)
+                $pcoipAgentInstallerUrl = $using:pcoipAgentInstallerUrl
+                $installerFileName = [System.IO.Path]::GetFileName($pcoipAgentInstallerUrl)
                 $destFile = "C:\WindowsAzure\PCoIPAgentInstaller\" + $installerFileName
                 
 				Write-Verbose "Downloading PCoIP Agent"
-                Invoke-WebRequest $agentSourceUrl -OutFile $destFile
+                Invoke-WebRequest $pcoipAgentInstallerUrl -OutFile $destFile
 
                 #install the agent
 				Write-Verbose "Installing PCoIP Agent"
