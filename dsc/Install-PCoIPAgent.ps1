@@ -23,6 +23,8 @@ Configuration InstallPCoIPAgent
 	
     Node "localhost"
     {
+        VmUsability TheVmUsability
+
         LocalConfigurationManager
         {
             RebootNodeIfNeeded = $true
@@ -202,6 +204,29 @@ Configuration InstallPCoIPAgent
 					$svc.WaitForStatus("Running", 120)
 				}
             }
+        }
+    }
+}
+
+Configuration VmUsability
+{
+    Import-DscResource -module xFirefox
+
+    Node "localhost"
+    {
+        Registry DisableServerManager
+        {
+            Ensure = "Present"
+            Key = "HKLM:\Software\Microsoft\ServerManager"
+            ValueName = "DoNotOpenServerManagerAtLogon"
+            ValueData = "1"
+            ValueType = "Dword"
+        }
+
+
+        MSFT_xFirefox InstallFirefox
+        {
+            #install the latest firefox browser
         }
     }
 }
