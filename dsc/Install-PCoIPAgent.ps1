@@ -210,8 +210,15 @@ Configuration InstallPCoIPAgent
 
 Configuration VmUsability
 {
-    Import-DscResource -module xFirefox
+    Node "localhost"
+    {
+        DisableServerManager TheDisableServerManager
+        InstallFirefox TheInstallFirefox
+    }
+}
 
+Configuration DisableServerManager
+{
     Node "localhost"
     {
         Registry DisableServerManager
@@ -222,8 +229,15 @@ Configuration VmUsability
             ValueData = "1"
             ValueType = "Dword"
         }
+    }
+}
 
+Configuration InstallFirefox
+{
+    Import-DscResource -module xFirefox
 
+    Node "localhost"
+    {
         MSFT_xFirefox InstallFirefox
         {
             #install the latest firefox browser
