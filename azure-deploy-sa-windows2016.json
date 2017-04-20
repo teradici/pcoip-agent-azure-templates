@@ -1,0 +1,81 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminUser": {
+      "type": "string",
+      "defaultValue": "adminUser",
+      "minLength": 2,
+      "maxLength": 20,
+      "metadata": {
+        "description": "Username for the Virtual Machine."
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "minLength": 12,
+      "maxLength": 123,
+      "metadata": {
+        "description": "Password for the Virtual Machine."
+      }
+    },
+    "registrationCode": {
+      "type": "securestring",
+      "minLength": 21,
+      "metadata": {
+        "description": "PCoIP Standard Agent License Registration Code."
+      }
+    },
+    "_artifactsLocation": {
+      "type": "string",
+      "defaultValue": "https://devtemplatestore.blob.core.windows.net/templates/master/deployments",
+      "metadata": {
+        "description": "The base location of resources, such as templates and DSC modules, that the template depends on"
+      }
+    }
+  },
+  "variables": {
+    "deploymentApiVersion": "2016-09-01"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "deployAgent",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'), '/resources/', 'azure_deploy.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "adminUser": {
+            "value": "[parameters('adminUser')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "vmSize": {
+            "value": "Standard_D2_v2"
+          },
+          "pcoipAgentInstallerUrl": {
+            "value": "https://binarystore.blob.core.windows.net/agents/2.8/PCoIP_agent_release_installer_2.8.0.5813_standard.exe"
+          },
+          "registrationCode": {
+            "value": "[parameters('registrationCode')]"
+          },
+          "_artifactsLocation": {
+            "value": "[parameters('_artifactsLocation')]"
+          }
+        }
+      }
+    }
+  ],
+
+  "outputs": {
+    "vm_fqdn": {
+      "type": "string",
+      "value": "[reference('deployAgent').outputs.vm_fqdn.value]"
+    }
+  }
+}

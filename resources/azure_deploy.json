@@ -19,16 +19,36 @@
         "description": "Password for the Virtual Machine."
       }
     },
+    "vmSize": {
+      "type": "string",
+      "metadata": {
+        "description": "Virtual Machine Size."
+      }
+    },
     "registrationCode": {
       "type": "securestring",
       "minLength": 21,
       "metadata": {
         "description": "PCoIP Standard Agent License Registration Code."
       }
-    },       
+    },
+    "videoDriverUrl": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The URL from which video driver for virtual machine will be downloaded, only required for the Graphics Agent."
+      }
+    },
+    "pcoipAgentInstallerUrl": {
+      "type": "string",
+      "minLength": 13,
+      "metadata": {
+        "description": "The URL from which pciop agent installer will be downloaded."
+      }
+    },
     "_artifactsLocation": {
       "type": "string",
-      "defaultValue": "https://devtemplatestore.blob.core.windows.net/templates/master/deployments/azure",
+      "defaultValue": "https://devtemplatestore.blob.core.windows.net/templates/master/deployments",
       "metadata": {
         "description": "The base location of resources, such as templates and DSC modules, that the template depends on"
       }
@@ -41,18 +61,17 @@
     "subnetName": "[concat(variables('namePrefix'), '-subnet')]",
     "vmNamePrefix": "[concat(variables('namePrefix'), '-vm')]",
     "nsgName": "[concat(variables('namePrefix'), '-nsg')]",
-    "agentUrl": "https://binarystore.blob.core.windows.net/agents/2.8/PCoIP_agent_release_installer_2.8.0.6123_graphics.exe",
-    "nvidiaDriverUrl": "https://binarystore.blob.core.windows.net/thirdparty/nvidia/369.95_grid_win10_server2016_64bit_international.exe"
+    "resourceLoc": "[concat(parameters('_artifactsLocation'), '/resources/')]"
   },
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "depolyAgentNsg",
+      "name": "deployNsg",
       "apiVersion": "[variables('deploymentApiVersion')]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), '/resources/', 'pcoip_agent_nsg.json')]",
+          "uri": "[concat(variables('resourceLoc'), 'pcoip_agent_nsg.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -65,12 +84,12 @@
 
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "depolyVNet",
+      "name": "deployVNet",
       "apiVersion": "[variables('deploymentApiVersion')]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), '/resources/', 'virtual_network.json')]",
+          "uri": "[concat(variables('resourceLoc'), 'virtual_network.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -86,16 +105,16 @@
 
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "depolyNIC",
+      "name": "deployNIC",
       "apiVersion": "[variables('deploymentApiVersion')]",
       "dependsOn": [
-        "depolyAgentNsg",
-        "depolyVNet"
+        "deployNsg",
+        "deployVNet"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), '/resources/', 'network_interface_pubIP.json')]",
+          "uri": "[concat(variables('resourceLoc'), 'network_interface_pubIP.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -120,12 +139,12 @@
       "name": "deployVM",
       "apiVersion": "[variables('deploymentApiVersion')]",
       "dependsOn": [
-        "depolyNIC"
+        "deployNIC"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), '/resources/', 'virtual_machine.json')]",
+          "uri": "[concat(variables('resourceLoc'), 'virtual_machine.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -139,10 +158,10 @@
             "value": "[parameters('adminPassword')]"
           },
           "vmSize": {
-            "value": "Standard_NV6"
+            "value": "[parameters('vmSize')]"
           },
           "nicName": {
-            "value": "[reference('depolyNIC').outputs.nicName.value]"
+            "value": "[reference('deployNIC').outputs.nicName.value]"
           }
         }
       }
@@ -150,7 +169,7 @@
 
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "deployNvidiaAndAgentDsc",
+      "name": "deployVmDsc",
       "apiVersion": "[variables('deploymentApiVersion')]",
       "dependsOn": [
         "deployVM"
@@ -158,18 +177,18 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), '/ga/', 'vm_install_nvidia_and_agent_dsc.json')]",
+          "uri": "[concat(variables('resourceLoc'), 'vm_pcoip_agent_dsc.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
           "vmName": {
             "value": "[variables('vmNamePrefix')]"
           },
-          "agentSourceUrl": {
-            "value": "[variables('agentUrl')]"
+          "pcoipAgentInstallerUrl": {
+            "value": "[parameters('pcoipAgentInstallerUrl')]"
           },
-          "nvidiaSourceUrl": {
-            "value": "[variables('nvidiaDriverUrl')]"
+          "videoDriverUrl": {
+            "value": "[parameters('videoDriverUrl')]"
           },
           "registrationCode": {
             "value": "[parameters('registrationCode')]"
@@ -185,7 +204,7 @@
   "outputs": {
     "vm_fqdn": {
       "type": "string",
-      "value": "[reference('depolyNIC').outputs.vm_fqdn.value]"
+      "value": "[reference('deployNIC').outputs.vm_fqdn.value]"
     }
   }
 }
