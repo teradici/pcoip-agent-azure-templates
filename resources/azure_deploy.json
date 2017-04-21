@@ -48,7 +48,7 @@
     },
     "_artifactsLocation": {
       "type": "string",
-      "defaultValue": "https://devtemplatestore.blob.core.windows.net/templates/master/deployments",
+      "defaultValue": "https://raw.githubusercontent.com/teradici/pcoip-agent-azure-templates/master",
       "metadata": {
         "description": "The base location of resources, such as templates and DSC modules, that the template depends on"
       }

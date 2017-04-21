@@ -22,13 +22,13 @@ By clicking one of the *Deploy to Azure* buttons below you accept the terms of t
 
 To deploy a Teradici PCoIP **Standard** agent, on a [Standard_D2_v2](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general)\* type virtual machine, click
     
-<a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fdevtemplatestore.blob.core.windows.net%2Ftemplates%2Fmaster%2Fdeployments%2Fazure-deploy-sa-windows2016.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
+<a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fteradici%2Fpcoip-agent-azure-templates%2Fmaster%2Fazure-deploy-sa-windows2016.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
 
 #### Teradici PCoIP Graphics agent
 
 To deploy a Teradici PCoIP **Graphics** agent, on a [NV6](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-gpu)\* type virtual machine, click
 
-<a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fdevtemplatestore.blob.core.windows.net%2Ftemplates%2Fmaster%2Fdeployments%2Fazure-deploy-ga-windows2016.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
+<a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fteradici%2Fpcoip-agent-azure-templates%2Fmaster%2Fazure-deploy-ga-windows2016.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
 
 
 Next follow these steps:
