@@ -1,0 +1,93 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+    "nsgName": {
+      "type": "string",
+      "defaultValue": "pcoip-agent-nsg",
+      "metadata": {
+        "description": "Name of the network security group.",
+        "minLength": 1,
+        "maxLength": 80
+      }
+    }
+  },
+
+  "variables": {
+    "apiVersion": "2016-12-01"
+  },
+
+  "resources": [
+    {
+      "apiVersion": "[variables('apiVersion')]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[parameters('nsgName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "NSG - PCoIP Agent"
+      },
+
+      "properties": {
+        "securityRules": [
+          {
+            "name": "rdp-rule",
+            "properties": {
+              "description": "Allow RDP Session",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3389",
+              "sourceAddressPrefix": "INTERNET",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "pcoip-agent-broker-rule",
+            "properties": {
+              "description": "Allow PCoIP Broker Protocol",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "443",
+              "sourceAddressPrefix": "INTERNET",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 200,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "pcoip-agent-session-rule",
+            "properties": {
+              "description": "Allow PCoIP Session",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "4172",
+              "sourceAddressPrefix": "INTERNET",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 201,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "pcoip-agent-diagnostics-rule",
+            "properties": {
+              "description": "Allow PCoIP Diagnostics Traffic",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "60443",
+              "sourceAddressPrefix": "INTERNET",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 202,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

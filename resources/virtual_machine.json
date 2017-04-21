@@ -1,0 +1,102 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters" : {
+    "vmNamePrefix": {
+      "type": "string",
+      "defaultValue": "pcoip-agent-vm",      
+      "metadata": {
+        "description": "Virtual Machine Name prefix"
+      }
+    },      
+    "adminUser": {
+      "type": "string",
+      "metadata": { "description": "Username for local admin account." }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": { "description": "Password for local admin account." }
+    },      
+    "osType": {
+      "type": "string",
+      "defaultValue": "Windows Server 2016",
+      "allowedValues": [
+        "Windows Server 2016"
+      ],
+      "metadata": {
+        "description": "Type of OS to use for VMs: Windows."
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "metadata": {
+        "description": "Virtual Machine Size."
+      }
+    },
+    "nicName": {
+      "type": "string",
+      "metadata": {
+        "description": "Network Interface used by this Virtual Machine"
+      }
+    }
+  },
+
+  "variables": {
+    "osSettings": {
+      "Windows Server 2016": {
+        "publisher": "MicrosoftWindowsServer",
+        "offer": "WindowsServer",
+        "sku": "2016-Datacenter",
+        "version": "latest"
+      }
+    },
+
+    "vmSettings": {
+      "vmNamePrefix": "[parameters('vmNamePrefix')]",
+      "adminUser": "[parameters('adminUser')]",
+      "adminPassword": "[parameters('adminPassword')]",
+      "vmSize": "[parameters('vmSize')]",
+      "nicName": "[parameters('nicName')]",
+      "os": "[variables('osSettings')[parameters('osType')]]"
+    }
+  },
+
+  "resources": [
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[variables('vmSettings').vmNamePrefix]",
+      "apiVersion": "2017-03-30",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('vmSettings').vmSize]"
+        },
+        "osProfile": {
+          "computerName": "[variables('vmSettings').vmNamePrefix]",
+          "adminUsername": "[variables('vmSettings').adminUser]",
+          "adminPassword": "[variables('vmSettings').adminPassword]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('vmSettings').os.publisher]",
+            "offer": "[variables('vmSettings').os.offer]",
+            "sku": "[variables('vmSettings').os.sku]",
+            "version": "[variables('vmSettings').os.version]"
+          },
+          "osDisk": {
+            "name": "pcoip-agent-disk",
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('vmSettings').nicName)]"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

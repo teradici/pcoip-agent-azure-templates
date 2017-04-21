@@ -1,0 +1,74 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters" : {
+    "vnetName": {
+      "type": "string",
+      "defaultValue": "pcoip-agent-vnet",
+      "metadata": {
+        "description": "Name of the Virtual Network.",
+        "minLength": 2,
+        "maxLength": 64
+      }
+    },
+    "vnetPrefix": {
+      "type": "string",
+      "defaultValue": "192.168.0.0/16",
+      "metadata": {
+        "description": "CIDR prefix for the VNet address space."
+      }
+    },
+    "subnetName": {
+      "type": "string",
+      "defaultValue": "pcoip-agent-subnet",
+      "metadata": {
+        "description": "Name of the agent subnet."
+      }
+    },
+    "subnetPrefix": {
+      "type": "string",
+      "defaultValue": "192.168.1.0/24",
+      "metadata": {
+        "description": "CIDR address prefix for the subnet."
+      }
+    }
+  },  
+
+  "variables": {
+    "apiVersion": "2016-12-01"
+  },
+
+  "resources": [
+    {
+      "apiVersion": "[variables('apiVersion')]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[parameters('vnetName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "VNet - PCoIP Agent"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('vnetPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[parameters('subnetName')]",
+            "properties": {
+                "addressPrefix": "[parameters('subnetPrefix')]"
+            }
+          }
+        ]
+      }
+    }  
+  ],
+
+  "outputs": {
+    "subnetRef": {
+      "type": "string",
+      "value": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName')),'/subnets/',parameters('subnetName'))]"
+    }
+  }
+}

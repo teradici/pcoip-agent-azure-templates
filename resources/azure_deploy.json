@@ -1,0 +1,210 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminUser": {
+      "type": "string",
+      "defaultValue": "adminUser",
+      "minLength": 2,
+      "maxLength": 20,
+      "metadata": {
+        "description": "Username for the Virtual Machine."
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "minLength": 12,
+      "maxLength": 123,
+      "metadata": {
+        "description": "Password for the Virtual Machine."
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "metadata": {
+        "description": "Virtual Machine Size."
+      }
+    },
+    "registrationCode": {
+      "type": "securestring",
+      "minLength": 21,
+      "metadata": {
+        "description": "PCoIP Standard Agent License Registration Code."
+      }
+    },
+    "videoDriverUrl": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The URL from which video driver for virtual machine will be downloaded, only required for the Graphics Agent."
+      }
+    },
+    "pcoipAgentInstallerUrl": {
+      "type": "string",
+      "minLength": 13,
+      "metadata": {
+        "description": "The URL from which pciop agent installer will be downloaded."
+      }
+    },
+    "_artifactsLocation": {
+      "type": "string",
+      "defaultValue": "https://raw.githubusercontent.com/teradici/pcoip-agent-azure-templates/master",
+      "metadata": {
+        "description": "The base location of resources, such as templates and DSC modules, that the template depends on"
+      }
+    }
+  },
+  "variables": {
+    "deploymentApiVersion": "2016-09-01",
+    "namePrefix": "pcoip-agent",
+    "vnetName": "[concat(variables('namePrefix'), '-vnet')]",
+    "subnetName": "[concat(variables('namePrefix'), '-subnet')]",
+    "vmNamePrefix": "[concat(variables('namePrefix'), '-vm')]",
+    "nsgName": "[concat(variables('namePrefix'), '-nsg')]",
+    "resourceLoc": "[concat(parameters('_artifactsLocation'), '/resources/')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "deployNsg",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('resourceLoc'), 'pcoip_agent_nsg.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "nsgName": {
+            "value": "[variables('nsgName')]"
+          }
+        }
+      }
+    },
+
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "deployVNet",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('resourceLoc'), 'virtual_network.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "vnetName": {
+            "value": "[variables('vnetName')]"
+          },
+          "subnetName": {
+            "value": "[variables('subnetName')]"
+          }
+        }
+      }
+    },
+
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "deployNIC",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "dependsOn": [
+        "deployNsg",
+        "deployVNet"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('resourceLoc'), 'network_interface_pubIP.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "namePrefix": {
+            "value": "[variables('namePrefix')]"
+          },
+          "nsgName": {
+            "value": "[variables('nsgName')]"
+          },
+          "vnetName": {
+            "value": "[variables('vnetName')]"
+          },
+          "subnetName": {
+            "value": "[variables('subnetName')]"
+          }
+        }
+      }
+    },
+
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "deployVM",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "dependsOn": [
+        "deployNIC"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('resourceLoc'), 'virtual_machine.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "vmNamePrefix": {
+            "value": "[variables('vmNamePrefix')]"
+          },
+          "adminUser": {
+            "value": "[parameters('adminUser')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "vmSize": {
+            "value": "[parameters('vmSize')]"
+          },
+          "nicName": {
+            "value": "[reference('deployNIC').outputs.nicName.value]"
+          }
+        }
+      }
+    },
+
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "deployVmDsc",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "dependsOn": [
+        "deployVM"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('resourceLoc'), 'vm_pcoip_agent_dsc.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "vmName": {
+            "value": "[variables('vmNamePrefix')]"
+          },
+          "pcoipAgentInstallerUrl": {
+            "value": "[parameters('pcoipAgentInstallerUrl')]"
+          },
+          "videoDriverUrl": {
+            "value": "[parameters('videoDriverUrl')]"
+          },
+          "registrationCode": {
+            "value": "[parameters('registrationCode')]"
+          },
+          "_artifactsLocation": {
+            "value": "[parameters('_artifactsLocation')]"
+          }
+        }
+      }
+    }
+  ],
+
+  "outputs": {
+    "vm_fqdn": {
+      "type": "string",
+      "value": "[reference('deployNIC').outputs.vm_fqdn.value]"
+    }
+  }
+}

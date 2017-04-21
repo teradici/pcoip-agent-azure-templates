@@ -1,0 +1,104 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "namePrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "a name prefix of a virtual machine which the nic will be attached to."
+      }
+    },
+
+    "nsgName": {
+      "type": "string",
+      "metadata": {
+        "description": "name of network security group that will be associated to this network interface."
+      }
+    },
+
+    "vnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "name of virtual network which the network interface will be belonged to."
+      }
+    },
+
+    "subnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "name of sub network which the network interface will be belonged to."
+      }
+    }
+  },
+
+  "variables": {
+    "apiVersion": "2016-12-01",
+    "nicName": "[concat(parameters('namePrefix'), '-nic')]",
+    "pipName": "[concat(parameters('namePrefix'), '-pip')]",
+    "domainNameLabel": "[tolower(replace(concat(parameters('namePrefix'), '-', uniqueString(resourceGroup().name)), '.',''))]",
+    "subnetId": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName')),'/subnets/',parameters('subnetName'))]",
+    "nsgId": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName'))]"
+  },
+
+  "resources": [
+    {
+      "apiVersion": "[variables('apiVersion')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('pipName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "PublicIPAddress - PCoIP Agent"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[variables('domainNameLabel')]"
+        }
+      }
+    },
+
+    {
+      "apiVersion": "[variables('apiVersion')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[variables('nicName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "NetworkInterface - PCoIP Agent"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('pipName'))]"
+      ],
+      "properties": {
+        "networkSecurityGroup": {
+          "id": "[variables('nsgId')]"
+        },
+
+        "ipConfigurations": [
+          {
+            "name": "ipconfig",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('pipName'))]"
+              },
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('subnetId')]"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+
+  "outputs": {
+    "vm_fqdn": {
+      "type": "string",
+      "value": "[reference(resourceId ('Microsoft.Network/publicIPAddresses', variables('pipName')), variables('apiVersion')).dnsSettings.fqdn]"
+    },
+    "nicName": {
+      "type":  "string",
+      "value": "[variables('nicName')]"
+    }
+  }  
+}
