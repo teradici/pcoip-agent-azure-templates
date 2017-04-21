@@ -1,4 +1,4 @@
-# Deploying Teradici Cloud Access Software on Microsoft Azure
+# Deploy Teradici Cloud Access Software on Azure
 
 Use these steps to deploy a Virtual Machine on Azure, running Windows Server 2016, and the latest (v2.8) [Teradici Cloud Access Software](http://www.teradici.com/products-and-solutions/pcoip-products/cloud-access-software) - Standard Edition or Graphics Edition. 
 
