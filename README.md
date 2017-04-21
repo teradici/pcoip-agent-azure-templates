@@ -50,7 +50,7 @@ Deployment will now start and may take up to 15 minutes to complete. You can tra
 
 ##### Footnotes
 
- <sup>[1]</sup> see the [Azure Pricing Guide](https://]azure.microsoft.com/pricing/details/virtual-machines/windows/) for estimated virtual machine pricing.
+ <sup>[1]</sup> see the [Azure Pricing Guide](https://azure.microsoft.com/pricing/details/virtual-machines/windows/) for estimated virtual machine pricing.
 
  <sup>[2]</sup> see the [FAQs about Windows Virtual Machines](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/faq) for Azure virtual machine username and password requirements.
 
