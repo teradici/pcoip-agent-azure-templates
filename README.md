@@ -39,8 +39,8 @@ Next follow these steps:
     * *Resource group:* Select *Create new*, then enter a resource group name (for example *teradici_trial*).
     * *Location:* Select a location. 
         * Note: Teradici PCoIP Graphics agent deployments require locations that support NV instance types, currently this is limited to the following locations: EAST US, NORTH CENTRAL US, SOUTH CENTRAL US, SOUTHEAST ASIA, or WEST EUROPE.
-    * *Admin User:* Enter a username <sup>[2]</sup> for the virtual machine, this will be used for your PCoIP session connection login.
-    * *Admin Password:* Enter a password <sup>[2]</sup> for the virtual machine.
+    * *User Name:* Enter a username <sup>[2]</sup> for the virtual machine, this will be used for your PCoIP session connection login..
+    * *Password:* Enter a password <sup>[2]</sup> for the virtual machine.
     * *Registration Code:* Enter the Registration code you received from Teradici.
 * Review the Microsoft Terms and Conditions. Indicate your agreement by selecting *I agree to the terms and conditions stated above*.
 * Enable *Pin to dashboard* if you wish to monitor the status of your deployment from the Azure dashboard.
@@ -76,16 +76,16 @@ When you are finished using the Teradici PCoIP agent (and in order to avoid unwa
 * Find and right-click the resource group name you created and choose **Delete**.
 * Enter the resource group name when prompted and click **Delete**.
 
-## More Information
 
-* [Teradici Cloud Access Software](http://www.teradici.com/products-and-solutions/pcoip-products/cloud-access-software)
-* [Teradici Cloud Access Software documentation (v2.8)](https://techsupport.teradici.com/ics/support/kbanswer.asp?deptID=15164&task=knowledge&questionID=3090) which includes release notes, quick start guides, etc...
-* [Teradici Technical Support](https://techsupport.teradici.com)
-* [Teradici Community Forum](https://communities.teradici.com/topics/cloud+access+software.html)
+## Additional Resources
+If you have suggestions for improvements or issues with the deployment scripts, please open a discussion in the [Teradici Community Forum](https://communities.teradici.com/topics/cloud+access+software.html). Alternatively visit [Teradici Technical Support](https://techsupport.teradici.com).
+
+For additional information about Teradici Cloud Access Software, please visit [Teradici Cloud Access Software](http://www.teradici.com/products-and-solutions/pcoip-products/cloud-access-software) or refer to the [Teradici Cloud Access Software documentation (v2.8)](https://techsupport.teradici.com/ics/support/kbanswer.asp?deptID=15164&task=knowledge&questionID=3090).
+
 
 ## Credits
 
-* Some content in this article is based on the Azure quick start Templates, © Microsoft Azure, licensed under the [MIT license](https://github.com/Azure/azure-quickstart-templates/blob/master/LICENSE).
+Some content in this article is based on the Azure quick start Templates, © Microsoft Azure, licensed under the [MIT license](https://github.com/Azure/azure-quickstart-templates/blob/master/LICENSE).
 
 <p>&nbsp;</p>
 © 2017 Teradici Corporation. All Rights Reserved.

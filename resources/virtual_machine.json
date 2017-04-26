@@ -1,22 +1,26 @@
 {
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
-  "parameters" : {
+  "parameters": {
     "vmNamePrefix": {
       "type": "string",
-      "defaultValue": "pcoip-agent-vm",      
+      "defaultValue": "pcoip-agent-vm",
       "metadata": {
         "description": "Virtual Machine Name prefix"
       }
-    },      
-    "adminUser": {
-      "type": "string",
-      "metadata": { "description": "Username for local admin account." }
     },
-    "adminPassword": {
+    "userName": {
+      "type": "string",
+      "metadata": {
+        "description": "Username for local admin account."
+      }
+    },
+    "password": {
       "type": "securestring",
-      "metadata": { "description": "Password for local admin account." }
-    },      
+      "metadata": {
+        "description": "Password for local admin account." 
+      }
+    },
     "osType": {
       "type": "string",
       "defaultValue": "Windows Server 2016",
@@ -53,8 +57,8 @@
 
     "vmSettings": {
       "vmNamePrefix": "[parameters('vmNamePrefix')]",
-      "adminUser": "[parameters('adminUser')]",
-      "adminPassword": "[parameters('adminPassword')]",
+      "adminUserName": "[parameters('userName')]",
+      "adminPassword": "[parameters('password')]",
       "vmSize": "[parameters('vmSize')]",
       "nicName": "[parameters('nicName')]",
       "os": "[variables('osSettings')[parameters('osType')]]"
@@ -73,7 +77,7 @@
         },
         "osProfile": {
           "computerName": "[variables('vmSettings').vmNamePrefix]",
-          "adminUsername": "[variables('vmSettings').adminUser]",
+          "adminUsername": "[variables('vmSettings').adminUserName]",
           "adminPassword": "[variables('vmSettings').adminPassword]"
         },
         "storageProfile": {
