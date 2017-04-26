@@ -39,7 +39,7 @@ Next follow these steps:
     * *Resource group:* Select *Create new*, then enter a resource group name (for example *teradici_trial*).
     * *Location:* Select a location. 
         * Note: Teradici PCoIP Graphics agent deployments require locations that support NV instance types, currently this is limited to the following locations: EAST US, NORTH CENTRAL US, SOUTH CENTRAL US, SOUTHEAST ASIA, or WEST EUROPE.
-    * *User Name:* Enter a username <sup>[2]</sup> for the virtual machine, this will be used for your PCoIP session connection login..
+    * *User Name:* Enter a username <sup>[2]</sup> for the virtual machine, this will be used for your PCoIP session connection login.
     * *Password:* Enter a password <sup>[2]</sup> for the virtual machine.
     * *Registration Code:* Enter the Registration code you received from Teradici.
 * Review the Microsoft Terms and Conditions. Indicate your agreement by selecting *I agree to the terms and conditions stated above*.
