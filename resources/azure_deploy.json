@@ -2,16 +2,15 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "adminUser": {
+    "userName": {
       "type": "string",
-      "defaultValue": "adminUser",
       "minLength": 2,
       "maxLength": 20,
       "metadata": {
         "description": "Username for the Virtual Machine."
       }
     },
-    "adminPassword": {
+    "password": {
       "type": "securestring",
       "minLength": 12,
       "maxLength": 123,
@@ -48,7 +47,6 @@
     },
     "_artifactsLocation": {
       "type": "string",
-      "defaultValue": "https://raw.githubusercontent.com/teradici/pcoip-agent-azure-templates/master",
       "metadata": {
         "description": "The base location of resources, such as templates and DSC modules, that the template depends on"
       }
@@ -151,11 +149,11 @@
           "vmNamePrefix": {
             "value": "[variables('vmNamePrefix')]"
           },
-          "adminUser": {
-            "value": "[parameters('adminUser')]"
+          "userName": {
+            "value": "[parameters('userName')]"
           },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
+          "password": {
+            "value": "[parameters('password')]"
           },
           "vmSize": {
             "value": "[parameters('vmSize')]"

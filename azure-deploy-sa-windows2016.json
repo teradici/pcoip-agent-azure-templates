@@ -2,16 +2,15 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "adminUser": {
+    "userName": {
       "type": "string",
-      "defaultValue": "adminUser",
       "minLength": 2,
       "maxLength": 20,
       "metadata": {
-        "description": "Username for the Virtual Machine."
+        "description": "User Name for the Virtual Machine."
       }
     },
-    "adminPassword": {
+    "password": {
       "type": "securestring",
       "minLength": 12,
       "maxLength": 123,
@@ -25,17 +24,12 @@
       "metadata": {
         "description": "PCoIP Standard Agent License Registration Code."
       }
-    },
-    "_artifactsLocation": {
-      "type": "string",
-      "defaultValue": "https://raw.githubusercontent.com/teradici/pcoip-agent-azure-templates/master",
-      "metadata": {
-        "description": "The base location of resources, such as templates and DSC modules, that the template depends on"
-      }
     }
   },
   "variables": {
-    "deploymentApiVersion": "2016-09-01"
+    "deploymentApiVersion": "2016-09-01",
+    "artifactsLocation": "https://raw.githubusercontent.com/teradici/pcoip-agent-azure-templates/master",
+    "binaryLocation": "https://binarystore.blob.core.windows.net"
   },
   "resources": [
     {
@@ -45,27 +39,27 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), '/resources/', 'azure_deploy.json')]",
+          "uri": "[concat(variables('artifactsLocation'),'/resources/azure_deploy.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "adminUser": {
-            "value": "[parameters('adminUser')]"
+          "userName": {
+            "value": "[parameters('userName')]"
           },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
+          "password": {
+            "value": "[parameters('password')]"
           },
           "vmSize": {
             "value": "Standard_D2_v2"
           },
           "pcoipAgentInstallerUrl": {
-            "value": "https://binarystore.blob.core.windows.net/agents/2.8/PCoIP_agent_release_installer_2.8.0.5813_standard.exe"
+            "value": "[concat(variables('binaryLocation'), '/agents/2.8/PCoIP_agent_release_installer_2.8.0.5813_standard.exe')]"
           },
           "registrationCode": {
             "value": "[parameters('registrationCode')]"
           },
           "_artifactsLocation": {
-            "value": "[parameters('_artifactsLocation')]"
+            "value": "[variables('artifactsLocation')]"
           }
         }
       }
