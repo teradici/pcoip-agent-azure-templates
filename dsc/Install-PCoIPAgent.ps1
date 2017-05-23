@@ -214,6 +214,7 @@ Configuration VmUsability
     {
         DisableServerManager TheDisableServerManager
         InstallFirefox TheInstallFirefox
+        AudioService TheAudioService
     }
 }
 
@@ -234,13 +235,99 @@ Configuration DisableServerManager
 
 Configuration InstallFirefox
 {
-    Import-DscResource -module xFirefox
+    param
+    (
+        [string]$VersionNumber = "latest",
+        [string]$Language = "en-US",
+	    [string]$OS = "win",
+        [string]$MachineBits = "x86",
+	    [string]$LocalPath = "$env:SystemDrive\Windows\DtlDownloads\Firefox Setup " + $versionNumber +".exe"
+    )
+    Import-DscResource -ModuleName xPSDesiredStateConfiguration
+
+    xRemoteFile Downloader
+    {
+        Uri = "http://download.mozilla.org/?product=firefox-" + $VersionNumber +"&os="+$OS+"&lang=" + $Language 
+	    DestinationPath = $LocalPath
+    }
+	 
+    Script Install_Firefox
+    {
+        DependsOn = "[xRemoteFile]Downloader"
+        GetScript  = { @{ Result = "Install_Firefox" } }
+
+        TestScript = {
+            $regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Mozilla Firefox*"
+
+			if ( Test-Path -path $regPath)  {
+				return $true
+			} else {
+				return $false
+			} 
+		}
+
+        SetScript  = {
+            Write-Verbose "Installing firefox"
+            $destFile = $using:LocalPath
+            $ret = Start-Process -FilePath $destFile -ArgumentList "/SilentMode" -PassThru -Wait
+
+			if ($ret.ExitCode -ne 0) {
+                # retry
+                $ret = Start-Process -FilePath $destFile -ArgumentList "/SilentMode" -PassThru -Wait
+
+			    if ($ret.ExitCode -ne 0) {
+				    $errMsg = "Failed to install firefox. exitcode: " + $ret.ExitCode
+				    Write-Verbose $errMsg
+			    } else {
+                    Write-Verbose "Finished firefox Installation"
+                }
+			} else {
+                Write-Verbose "Finished firefox Installation"
+            }
+        }
+    }
+}
+
+Configuration AudioService
+{
+	$serviceName = "Audiosrv"
+	$svc = Get-Service -Name $serviceName   
 
     Node "localhost"
     {
-        MSFT_xFirefox InstallFirefox
+        Script SetAudioServiceAutomaticAndRunning
         {
-            #install the latest firefox browser
-        }
-    }
+            GetScript  = { @{ Result = "Audio_Service" } }
+
+            TestScript = {
+                $svc = $using:svc
+
+                if (($svc.StartType -ne "Automatic") -or ($svc.status -ne "Running")) {
+					return $false
+				} else {
+					return $true
+				} 
+			}
+
+            SetScript  = {
+                $serviceName = $using:serviceName
+                $svc = $using:svc
+				if ($svc.StartType -ne "Automatic") {
+					$msg = "start type of " + $servicename + " is: " + $svc.StartType
+					Write-Verbose $msg
+					Set-Service -name  $serviceName -StartupType Automatic
+					$msg = "changed start type of " + $servicename + " to: Automatic"
+					Write-Verbose $msg
+				}
+					
+				if ($svc.status -ne "Running") {
+					$msg = "status of " + $servicename + " is: " + $svc.status
+					Write-Verbose $msg
+					Set-Service -Name $serviceName -Status Running
+					$msg = "changed status of " + $servicename + " to: Running"
+					Write-Verbose $msg
+				}
+            }
+		}
+	}
 }
