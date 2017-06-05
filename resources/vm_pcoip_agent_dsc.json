@@ -8,17 +8,15 @@
         "description": "The Computer Name that this extension will be deployed on."
       }
     },
-    "pcoipAgentInstallerUrl": {
+    "agentType": {
       "type": "string",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Standard",
+        "Graphics"
+      ],
       "metadata": {
-        "description": "PCoIP Agent Installer URL from which to download"
-      }
-    },
-    "videoDriverUrl": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "Video driver URL from which to download"
+        "description": "PCoIP Agent Type: Standard or Graphics."
       }
     },
     "registrationCode": {
@@ -34,6 +32,25 @@
       }
     }
   },
+
+  "variables": {
+    "binaryLocation": "https://binarystore.blob.core.windows.net",
+
+    "extensions": {
+      "Standard": {
+        "pcoipAgentInstallerUrl": "[concat(variables('binaryLocation'), '/agents/2.8/PCoIP_agent_release_installer_2.8.0.6123_standard.exe')]",
+        "videoDriverUrl": ""
+      },
+      "Graphics": {
+        "pcoipAgentInstallerUrl": "[concat(variables('binaryLocation'), '/agents/2.8/PCoIP_agent_release_installer_2.8.0.6123_graphics.exe')]",
+        "videoDriverUrl": "[concat(variables('binaryLocation'), '/thirdparty/nvidia/369.95_grid_win10_server2016_64bit_international.exe')]"
+      }
+    },
+
+    "pcoipAgentInstallerUrl": "[variables('extensions')[parameters('agentType')].pcoipAgentInstallerUrl]",
+    "videoDriverUrl": "[variables('extensions')[parameters('agentType')].videoDriverUrl]"
+  },
+
   "resources": [
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
@@ -52,8 +69,8 @@
             "function": "InstallPCoIPAgent"
           },
           "configurationArguments": {
-            "pcoipAgentInstallerUrl": "[parameters('pcoipAgentInstallerUrl')]",
-            "videoDriverUrl": "[parameters('videoDriverUrl')]"
+            "pcoipAgentInstallerUrl": "[variables('pcoipAgentInstallerUrl')]",
+            "videoDriverUrl": "[variables('videoDriverUrl')]"
           },
           "privacy": {
             "DataCollection": "Disable"

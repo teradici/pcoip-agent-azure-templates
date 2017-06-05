@@ -1,0 +1,78 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "userName": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 20,
+      "metadata": {
+        "description": "User Name for the Virtual Machine."
+      }
+    },
+    "password": {
+      "type": "securestring",
+      "minLength": 12,
+      "maxLength": 123,
+      "metadata": {
+        "description": "Password for the Virtual Machine."
+      }
+    },
+    "registrationCode": {
+      "type": "securestring",
+      "minLength": 21,
+      "metadata": {
+        "description": "PCoIP Standard Agent License Registration Code."
+      }
+    }
+  },
+  "variables": {
+    "deploymentApiVersion": "2016-09-01",
+    "artifactsLocation": "https://raw.githubusercontent.com/teradici/pcoip-agent-azure-templates/master"
+  },
+
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "deployAgent",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('artifactsLocation'), '/resources/azure_deploy.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "osType": {
+            "value": "Windows Server 2016"
+          },
+          "userName": {
+            "value": "[parameters('userName')]"
+          },
+          "password": {
+            "value": "[parameters('password')]"
+          },
+          "agentType": {
+            "value": "Graphics"
+          },
+          "vmSize": {
+            "value": "Standard_NV6"
+          },
+          "registrationCode": {
+            "value": "[parameters('registrationCode')]"
+          },
+          "_artifactsLocation": {
+            "value": "[variables('artifactsLocation')]"
+          }
+        }
+      }
+    }
+  ],
+
+  "outputs": {
+    "vm_fqdn": {
+      "type": "string",
+      "value": "[reference('deployAgent').outputs.vm_fqdn.value]"
+    }
+  }
+}

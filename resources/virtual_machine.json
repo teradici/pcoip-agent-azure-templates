@@ -18,17 +18,18 @@
     "password": {
       "type": "securestring",
       "metadata": {
-        "description": "Password for local admin account." 
+        "description": "Password for local admin account."
       }
     },
     "osType": {
       "type": "string",
       "defaultValue": "Windows Server 2016",
       "allowedValues": [
-        "Windows Server 2016"
+        "Windows Server 2016",
+        "RHEL 7"
       ],
       "metadata": {
-        "description": "Type of OS to use for VMs: Windows."
+        "description": "Type of OS to use for VM."
       }
     },
     "vmSize": {
@@ -51,6 +52,12 @@
         "publisher": "MicrosoftWindowsServer",
         "offer": "WindowsServer",
         "sku": "2016-Datacenter",
+        "version": "latest"
+      },
+      "RHEL 7": {
+        "publisher": "RedHat",
+        "offer": "RHEL",
+        "sku": "7.3",
         "version": "latest"
       }
     },
@@ -102,5 +109,11 @@
         }
       }
     }
-  ]
+  ],
+  "outputs": {
+    "vmName": {
+      "type": "string",
+      "value": "[variables('vmSettings').vmNamePrefix]"
+    }
+  }
 }

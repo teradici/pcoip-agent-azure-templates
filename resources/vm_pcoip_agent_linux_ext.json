@@ -1,0 +1,58 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Computer Name that this extension will be deployed on."
+      }
+    },
+    "registrationCode": {
+      "type": "securestring",
+      "metadata": {
+        "description": "PCoIP Standard Agent License Registration Code."
+      }
+    },
+    "agentType": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Standard",
+        "Graphics"
+      ],
+      "metadata": {
+        "description": "PCoIP Agent Type: Standard or Graphics."
+      }
+    },
+    "_artifactsLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "The base location of script file"
+      }
+    }
+  },
+  "variables": {
+    "scriptFileName": "Install-PCoIPAgent.sh"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('vmName'), '/PCoIPAgentCustomExtension')]",
+      "apiVersion": "2017-03-30",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publisher": "Microsoft.Azure.Extensions",
+        "type": "CustomScript",
+        "typeHandlerVersion": "2.0",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [ "[concat(parameters('_artifactsLocation'), '/dsc/', variables('scriptFileName'))]" ]
+        },
+        "protectedSettings": {
+          "commandToExecute": "[concat('bash ', variables('scriptFileName'), ' ', parameters('registrationCode'))]"
+        }
+      }
+    }
+  ]
+}
