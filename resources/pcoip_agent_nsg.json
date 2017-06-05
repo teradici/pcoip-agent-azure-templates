@@ -11,6 +11,14 @@
         "minLength": 1,
         "maxLength": 80
       }
+    },
+    "rdPort": {
+      "type": "int",
+      "defaultValue": 3389,
+      "allowedValues": [ 3389, 22],
+      "metadata": {
+        "description": "Remote Desktop Connect Port Number, for windows it is RDP port, for Linux, it is SSH port."
+      }
     }
   },
 
@@ -36,7 +44,7 @@
               "description": "Allow RDP Session",
               "protocol": "Tcp",
               "sourcePortRange": "*",
-              "destinationPortRange": "3389",
+              "destinationPortRange": "[parameters('rdPort')]",
               "sourceAddressPrefix": "INTERNET",
               "destinationAddressPrefix": "*",
               "access": "Allow",

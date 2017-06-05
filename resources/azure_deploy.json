@@ -2,12 +2,23 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "osType": {
+      "type": "string",
+      "defaultValue": "Windows Server 2016",
+      "allowedValues": [
+        "Windows Server 2016",
+        "RHEL 7"
+      ],
+      "metadata": {
+        "description": "OS for Virtual Machine."
+      }
+    },
     "userName": {
       "type": "string",
       "minLength": 2,
       "maxLength": 20,
       "metadata": {
-        "description": "Username for the Virtual Machine."
+        "description": "User Name for the Virtual Machine."
       }
     },
     "password": {
@@ -20,29 +31,27 @@
     },
     "vmSize": {
       "type": "string",
+      "defaultValue": "Standard_D2_v2",
       "metadata": {
         "description": "Virtual Machine Size."
+      }
+    },
+    "agentType": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Standard",
+        "Graphics"
+      ],
+      "metadata": {
+        "description": "PCoIP Agent Type: Standard or Graphics."
       }
     },
     "registrationCode": {
       "type": "securestring",
       "minLength": 21,
       "metadata": {
-        "description": "PCoIP Standard Agent License Registration Code."
-      }
-    },
-    "videoDriverUrl": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "The URL from which video driver for virtual machine will be downloaded, only required for the Graphics Agent."
-      }
-    },
-    "pcoipAgentInstallerUrl": {
-      "type": "string",
-      "minLength": 13,
-      "metadata": {
-        "description": "The URL from which pciop agent installer will be downloaded."
+        "description": "PCoIP Agent License Registration Code."
       }
     },
     "_artifactsLocation": {
@@ -55,99 +64,34 @@
   "variables": {
     "deploymentApiVersion": "2016-09-01",
     "namePrefix": "pcoip-agent",
-    "vnetName": "[concat(variables('namePrefix'), '-vnet')]",
-    "subnetName": "[concat(variables('namePrefix'), '-subnet')]",
-    "vmNamePrefix": "[concat(variables('namePrefix'), '-vm')]",
-    "nsgName": "[concat(variables('namePrefix'), '-nsg')]",
-    "resourceLoc": "[concat(parameters('_artifactsLocation'), '/resources/')]"
+    "resourceLoc": "[concat(parameters('_artifactsLocation'), '/resources/')]",
+    "osConfigs": {
+      "Windows Server 2016": {
+        "rdPort": 3389,
+        "extensionFile": "vm_pcoip_agent_dsc.json"
+      },
+      "RHEL 7": {
+        "rdPort": 22,
+        "extensionFile": "vm_pcoip_agent_linux_ext.json"
+      }
+    },
+    "extensionFileUrl": "[concat(variables('resourceLoc'), variables('osConfigs')[parameters('osType')].extensionFile)]",
+    "rdPort": "[variables('osConfigs')[parameters('osType')].rdPort]"
   },
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "deployNsg",
+      "name": "deployInfraVM",
       "apiVersion": "[variables('deploymentApiVersion')]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(variables('resourceLoc'), 'pcoip_agent_nsg.json')]",
+          "uri": "[concat(variables('resourceLoc'), 'azure_deploy_infra_vm.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "nsgName": {
-            "value": "[variables('nsgName')]"
-          }
-        }
-      }
-    },
-
-    {
-      "type": "Microsoft.Resources/deployments",
-      "name": "deployVNet",
-      "apiVersion": "[variables('deploymentApiVersion')]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('resourceLoc'), 'virtual_network.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "vnetName": {
-            "value": "[variables('vnetName')]"
-          },
-          "subnetName": {
-            "value": "[variables('subnetName')]"
-          }
-        }
-      }
-    },
-
-    {
-      "type": "Microsoft.Resources/deployments",
-      "name": "deployNIC",
-      "apiVersion": "[variables('deploymentApiVersion')]",
-      "dependsOn": [
-        "deployNsg",
-        "deployVNet"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('resourceLoc'), 'network_interface_pubIP.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "namePrefix": {
-            "value": "[variables('namePrefix')]"
-          },
-          "nsgName": {
-            "value": "[variables('nsgName')]"
-          },
-          "vnetName": {
-            "value": "[variables('vnetName')]"
-          },
-          "subnetName": {
-            "value": "[variables('subnetName')]"
-          }
-        }
-      }
-    },
-
-    {
-      "type": "Microsoft.Resources/deployments",
-      "name": "deployVM",
-      "apiVersion": "[variables('deploymentApiVersion')]",
-      "dependsOn": [
-        "deployNIC"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('resourceLoc'), 'virtual_machine.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "vmNamePrefix": {
-            "value": "[variables('vmNamePrefix')]"
+          "osType": {
+            "value": "[parameters('osType')]"
           },
           "userName": {
             "value": "[parameters('userName')]"
@@ -158,38 +102,37 @@
           "vmSize": {
             "value": "[parameters('vmSize')]"
           },
-          "nicName": {
-            "value": "[reference('deployNIC').outputs.nicName.value]"
+          "namePrefix": {
+            "value": "[variables('namePrefix')]"
+          },
+          "rdPort": {
+            "value": "[variables('rdPort')]"
+          },
+          "_artifactsLocation": {
+            "value": "[parameters('_artifactsLocation')]"
           }
         }
       }
     },
-
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "deployVmDsc",
+      "name": "deployVmExt",
       "apiVersion": "[variables('deploymentApiVersion')]",
-      "dependsOn": [
-        "deployVM"
-      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(variables('resourceLoc'), 'vm_pcoip_agent_dsc.json')]",
+          "uri": "[variables('extensionFileUrl')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
           "vmName": {
-            "value": "[variables('vmNamePrefix')]"
-          },
-          "pcoipAgentInstallerUrl": {
-            "value": "[parameters('pcoipAgentInstallerUrl')]"
-          },
-          "videoDriverUrl": {
-            "value": "[parameters('videoDriverUrl')]"
+            "value": "[reference('deployInfraVM').outputs.vmName.value]"
           },
           "registrationCode": {
             "value": "[parameters('registrationCode')]"
+          },
+          "agentType": {
+            "value": "[parameters('agentType')]"
           },
           "_artifactsLocation": {
             "value": "[parameters('_artifactsLocation')]"
@@ -202,7 +145,11 @@
   "outputs": {
     "vm_fqdn": {
       "type": "string",
-      "value": "[reference('deployNIC').outputs.vm_fqdn.value]"
+      "value": "[reference('deployInfraVM').outputs.vm_fqdn.value]"
+    },
+    "vmName": {
+      "type": "string",
+      "value": "[reference('deployInfraVM').outputs.vmName.value]"
     }
   }
 }

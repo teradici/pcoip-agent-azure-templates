@@ -1,6 +1,6 @@
 # Deploy Teradici Cloud Access Software on Azure
 
-Use these steps to deploy a Virtual Machine on Azure, running Windows Server 2016, and the latest (v2.8) [Teradici Cloud Access Software](http://www.teradici.com/products-and-solutions/pcoip-products/cloud-access-software) - Standard Edition or Graphics Edition. 
+Use these steps to deploy a Virtual Machine on Azure, running Windows Server 2016 or RHEL 7, and the latest (v2.8) [Teradici Cloud Access Software](http://www.teradici.com/products-and-solutions/pcoip-products/cloud-access-software) - Standard Edition or Graphics Edition.
 
 All resources required to run the Teradici PCoIP Standard or Graphics agent (components of Teradici Cloud Access Software) will be created and configured in your Azure subscription under a new resource group.
 
@@ -22,13 +22,13 @@ By clicking one of the *Deploy to Azure* buttons below you accept the terms of t
 
 To deploy a Teradici PCoIP **Standard** agent, on a [Standard_D2_v2](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general) <sup>[1]</sup> type virtual machine, click
     
-<a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fteradici%2Fpcoip-agent-azure-templates%2Fmaster%2Fazure-deploy-sa-windows2016.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
+<a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fteradici%2Fpcoip-agent-azure-templates%2Fmaster%2Fazure-deploy-sa.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
 
 #### Teradici PCoIP Graphics agent
 
 To deploy a Teradici PCoIP **Graphics** agent, on a [NV6](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-gpu) <sup>[1]</sup> type virtual machine, click
 
-<a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fteradici%2Fpcoip-agent-azure-templates%2Fmaster%2Fazure-deploy-ga-windows2016.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
+<a target="_blank" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fteradici%2Fpcoip-agent-azure-templates%2Fmaster%2Fazure-deploy-ga.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
 
 
 Next follow these steps:
@@ -39,6 +39,7 @@ Next follow these steps:
     * *Resource group:* Select *Create new*, then enter a resource group name (for example *teradici_trial*).
     * *Location:* Select a location. 
         * Note: Teradici PCoIP Graphics agent deployments require locations that support NV instance types, currently this is limited to the following locations: EAST US, NORTH CENTRAL US, SOUTH CENTRAL US, SOUTHEAST ASIA, or WEST EUROPE.
+    * *Operating System:* Select operating system you want to use from dropdown, only available for Standard Agent currently.
     * *User Name:* Enter a username <sup>[2]</sup> for the virtual machine, this will be used for your PCoIP session connection login.
     * *Password:* Enter a password <sup>[2]</sup> for the virtual machine.
     * *Registration Code:* Enter the Registration code you received from Teradici.
@@ -48,11 +49,13 @@ Next follow these steps:
 
 Deployment will now start and may take up to 15 minutes to complete. You can track the status of the deployment via the Azure Notifications drop down. Regular Azure charges will apply to your Microsoft Azure account for this deployment.
 
+Deployments may fail for various reasons. Should a failure occur, delete the resource group you created (via the Azure portal) and reattempt the deployment. Note: Only single agent deployments to a newly created resource group are currently supported.
+
 ##### Footnotes
 
  <sup>[1]</sup> see the [Azure Pricing Guide](https://azure.microsoft.com/pricing/details/virtual-machines/windows/) for estimated virtual machine pricing.
 
- <sup>[2]</sup> see the [FAQs about Windows Virtual Machines](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/faq) for Azure virtual machine username and password requirements.
+ <sup>[2]</sup> see the [FAQs about Windows Virtual Machines](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/faq) or [FAQs about Linux Virtual Machines](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/faq) for Azure username and password requirements.
 
 ## Connect to the PCoIP Agent
 
@@ -68,6 +71,15 @@ From the Teradici PCoIP client, establish a connection to the virtual machine wi
 
 #### Known Issue(s)
 * Initial, Windowed mode, connections to a newly deployed Teradici PCoIP **Graphics** agent, may result in a blank screen. To clear the blank screen, resize the window or connect in Full Screen mode.
+
+## Common error codes for Linux Deployment 
+100 -- Adding the Teradici repository failed.
+
+101 -- Installing PCoIP Agent failed.
+
+102 -- Registering PCoIP Agent license code failed.
+
+Please contact Teradici support if you see other error codes.
 
 ## Delete the PCoIP Agent
 

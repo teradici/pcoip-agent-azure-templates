@@ -2,6 +2,17 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "operatingSystem": {
+      "type": "string",
+      "defaultValue": "Windows Server 2016",
+      "allowedValues": [
+        "Windows Server 2016",
+        "RHEL 7"
+      ],
+      "metadata": {
+        "description": "Operating System for Virtual Machine."
+      }
+    },
     "userName": {
       "type": "string",
       "minLength": 2,
@@ -22,15 +33,15 @@
       "type": "securestring",
       "minLength": 21,
       "metadata": {
-        "description": "PCoIP Graphics Agent License Registration Code."
+        "description": "PCoIP Standard Agent License Registration Code."
       }
     }
   },
   "variables": {
     "deploymentApiVersion": "2016-09-01",
-    "artifactsLocation": "https://raw.githubusercontent.com/teradici/pcoip-agent-azure-templates/master",
-    "binaryLocation": "https://binarystore.blob.core.windows.net"
+    "artifactsLocation": "https://raw.githubusercontent.com/teradici/pcoip-agent-azure-templates/master"
   },
+
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
@@ -39,24 +50,24 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(variables('artifactsLocation'), '/resources/', 'azure_deploy.json')]",
+          "uri": "[concat(variables('artifactsLocation'), '/resources/azure_deploy.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
+          "osType": {
+            "value": "[parameters('operatingSystem')]"
+          },
           "userName": {
             "value": "[parameters('userName')]"
           },
           "password": {
             "value": "[parameters('password')]"
           },
+          "agentType": {
+            "value": "Standard"
+          },
           "vmSize": {
-            "value": "Standard_NV6"
-          },
-          "pcoipAgentInstallerUrl": {
-            "value": "[concat(variables('binaryLocation'), '/agents/2.8/PCoIP_agent_release_installer_2.8.0.6123_graphics.exe')]"
-          },
-          "videoDriverUrl": {
-            "value": "[concat(variables('binaryLocation'), '/thirdparty/nvidia/369.95_grid_win10_server2016_64bit_international.exe')]"
+            "value": "Standard_D2_v2"
           },
           "registrationCode": {
             "value": "[parameters('registrationCode')]"
