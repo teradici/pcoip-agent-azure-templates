@@ -22,7 +22,7 @@
       "type": "securestring",
       "minLength": 21,
       "metadata": {
-        "description": "PCoIP Standard Agent License Registration Code."
+        "description": "PCoIP Graphics Agent License Registration Code."
       }
     }
   },

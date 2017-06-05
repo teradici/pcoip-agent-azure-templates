@@ -22,7 +22,7 @@
     "registrationCode": {
       "type": "securestring",
       "metadata": {
-        "description": "PCoIP Standard Agent License Registration Code."
+        "description": "PCoIP Agent License Registration Code."
       }
     },
     "_artifactsLocation": {

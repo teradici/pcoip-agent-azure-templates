@@ -10,7 +10,7 @@
         "RHEL 7"
       ],
       "metadata": {
-        "description": "OS for Virtual Machine."
+        "description": "Operating System for Virtual Machine."
       }
     },
     "userName": {
