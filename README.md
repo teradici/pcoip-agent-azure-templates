@@ -48,7 +48,6 @@ Next follow these steps:
 * Click **Purchase**
 
 Deployment will now start and may take up to 15 minutes to complete. You can track the status of the deployment via the Azure Notifications drop down. Regular Azure charges will apply to your Microsoft Azure account for this deployment.
-Deployments may fail for various reasons. Should a failure occur, delete the resource group you created (via the Azure portal) and reattempt the deployment. Note: Only single agent deployments to a newly created resource group are currently supported.
 
 Deployments may fail for various reasons. Should a failure occur, delete the resource group you created (via the Azure portal) and reattempt the deployment. Note: Only single agent deployments to a newly created resource group are currently supported.
 
