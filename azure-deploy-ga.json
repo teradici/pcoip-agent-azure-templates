@@ -2,6 +2,17 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "operatingSystem": {
+      "type": "string",
+      "defaultValue": "Windows Server 2016",
+      "allowedValues": [
+        "Windows Server 2016",
+        "RHEL 7"
+      ],
+      "metadata": {
+        "description": "Operating System for Virtual Machine."
+      }
+    },
     "userName": {
       "type": "string",
       "minLength": 2,
@@ -44,7 +55,7 @@
         },
         "parameters": {
           "osType": {
-            "value": "Windows Server 2016"
+            "value": "[parameters('operatingSystem')]"
           },
           "userName": {
             "value": "[parameters('userName')]"
