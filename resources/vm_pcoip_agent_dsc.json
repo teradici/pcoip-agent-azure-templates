@@ -38,12 +38,12 @@
 
     "extensions": {
       "Standard": {
-        "pcoipAgentInstallerUrl": "[concat(variables('binaryLocation'), '/agents/2.8/PCoIP_agent_release_installer_2.8.0.6123_standard.exe')]",
+        "pcoipAgentInstallerUrl": "[concat(variables('binaryLocation'), '/agents/2.9/PCoIP_agent_release_installer_2.9.0.7172_standard.exe')]",
         "videoDriverUrl": ""
       },
       "Graphics": {
-        "pcoipAgentInstallerUrl": "[concat(variables('binaryLocation'), '/agents/2.8/PCoIP_agent_release_installer_2.8.0.6123_graphics.exe')]",
-        "videoDriverUrl": "[concat(variables('binaryLocation'), '/thirdparty/nvidia/369.95_grid_win10_server2016_64bit_international.exe')]"
+        "pcoipAgentInstallerUrl": "[concat(variables('binaryLocation'), '/agents/2.9/PCoIP_agent_release_installer_2.9.0.7172_graphics.exe')]",
+        "videoDriverUrl": "[concat(variables('binaryLocation'), '/thirdparty/nvidia/370.12_grid_win10_server2016_64bit_international.exe')]"
       }
     },
 

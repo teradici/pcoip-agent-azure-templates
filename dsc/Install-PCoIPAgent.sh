@@ -1,6 +1,82 @@
 #!/bin/bash
 
+install_driver()
+{
+    # Install kernel-source/kernel-devel and gcc
+    sudo yum -y install kernel-source kernel-devel gcc
+    FILE_NAME='NVIDIA-Linux-x86_64-367.106-grid.run'
+    FILE_LOCATION='/root/'$FILE_NAME
+    # Download Driver first
+    echo "Downloading and Installing Nvidia driver"
+    sudo wget --retry-connrefused --tries=3 --waitretry=5 -O $FILE_LOCATION https://binarystore.blob.core.windows.net/thirdparty/nvidia/$FILE_NAME
+    exitCode=$?
+    if [ $exitCode -ne 0 ]
+    then
+        echo "failed to download Nvidia driver."
+        # let's define exit code 103 for this case
+        exit 103
+    fi
+    # Change file permission
+    sudo chmod 744 $FILE_LOCATION
+    # run installer
+    sudo $FILE_LOCATION -Z -X -s
+    exitCode=$?
+    
+    if [ $exitCode -eq 0 ]
+    then
+        echo "Driver is installed successfully"
+    else
+        echo "failed to install Nvidia driver. Will create a script to install driver when machine boots up"
+        file_path=/root/install_driver.sh
+        cat <<EOF >$file_path
+#!/bin/bash
+if [ -e /root/.first_boot ]
+then
+    if [ -e /root/.second_boot ]
+    then
+        exit 0
+    else
+        touch /root/.second_boot
+        sudo $FILE_LOCATION -Z -X -s        
+    fi
+else
+    touch /root/.first_boot
+    sudo $FILE_LOCATION -Z -X -s
+    (sleep 2;  sudo shutdown -f -r +0)&
+fi
+EOF
+        sudo chmod 744 $file_path
+        (crontab -l 2>/dev/null; echo "@reboot $file_path") | crontab -
+        # let's define exit code 104 for this case
+        #exit 104
+    fi
+}
+
 # the first argument is the Registration Code of PCoIP agent
+REGISTRATION_CODE=$1
+# the second argument is the agent type
+AGENT_TYPE=$2
+
+# Make sure Linux OS is up to date
+echo "--> Updating Linux OS to latest"
+# Exclude WALinuxAgent due to it failing to update from within an Azure Custom Script
+sudo yum -y update --exclude=WALinuxAgent
+
+# If it's graphic agent, install Nvidia Driver
+case "$AGENT_TYPE" in 
+    "Graphics")
+        install_driver
+        AGENT_TYPE='graphics'
+        ;;
+    "Standard")
+        AGENT_TYPE='standard'
+        ;;   
+    *)
+        echo "unknown agent type $AGENT_TYPE."
+        # let's define exit code 105 for this case
+        exit 105
+        ;;       
+esac
 
 # Install the EPEL repository
 echo "-->Install the EPEL repository"
@@ -22,12 +98,10 @@ then
 fi
 
 # Install the PCoIP Agent
-echo "-->Install the PCoIP Agent"
-sudo yum -y update
-
+echo "-->Install the PCoIP $AGENT_TYPE agent"
 for idx in {1..3}
 do
-    sudo yum -y install pcoip-agent-standard
+    sudo yum -y install pcoip-agent-$AGENT_TYPE
     exitCode=$?
     
     if [ $exitCode -eq 0 ]
@@ -36,7 +110,7 @@ do
     else
         #delay 5 seconds
         sleep 5
-        sudo yum -y remove pcoip-agent-standard
+        sudo yum -y remove pcoip-agent-$AGENT_TYPE
         if [ $idx -eq 3 ]
         then
             echo "failed to install pcoip agent."
@@ -53,7 +127,7 @@ done
 echo "-->Register license code"
 for idx in {1..3}
 do
-    pcoip-register-host --registration-code=$1
+    pcoip-register-host --registration-code=$REGISTRATION_CODE
     pcoip-validate-license    
     exitCode=$?
     
@@ -67,6 +141,7 @@ do
             # let's define exit code 102 for this case
             exit 102
         fi
+        sleep 5
     fi
 done
 

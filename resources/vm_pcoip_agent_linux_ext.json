@@ -50,7 +50,7 @@
           "fileUris": [ "[concat(parameters('_artifactsLocation'), '/dsc/', variables('scriptFileName'))]" ]
         },
         "protectedSettings": {
-          "commandToExecute": "[concat('bash ', variables('scriptFileName'), ' ', parameters('registrationCode'))]"
+          "commandToExecute": "[concat('bash ', variables('scriptFileName'), ' ', parameters('registrationCode'), ' ', parameters('agentType'))]"
         }
       }
     }
