@@ -75,6 +75,7 @@ You now have access to a PCoIP cloud-delivered desktop.
 #### Known Issue(s)
 * Initial windowed mode connections to a newly deployed PCoIP **Graphics** Agent may result in a blank screen. To clear the blank screen, resize the window or connect in full-screen mode.
 * Reset password does not work from Azure portal for Linux agent if you have a capital letter in your user name. 
+* Currently Graphic Agent is not supported on Linux due to driver issues on RHEL 7.4. Please check back in later time. 
 
 ## Common error codes for Linux Deployment 
 100 -- Adding the Teradici repository failed.

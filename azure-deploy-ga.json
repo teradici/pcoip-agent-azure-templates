@@ -6,8 +6,7 @@
       "type": "string",
       "defaultValue": "Windows Server 2016",
       "allowedValues": [
-        "Windows Server 2016",
-        "RHEL 7"
+        "Windows Server 2016"
       ],
       "metadata": {
         "description": "Operating System for Virtual Machine."
