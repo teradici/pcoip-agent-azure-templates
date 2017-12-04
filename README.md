@@ -1,6 +1,6 @@
 # Deploy Teradici Cloud Access Software on Azure
 
-**Important!** This method of deploying Cloud Access Software on Azure is deprecated and is no-longer being maintained. To deploy Cloud Access Software on Azure please use [Teradici Cloud Access Manager]("https://github.com/teradici/deploy") or for more customized deployments, consult Teradici Cloud Access Software documentation for install and usage instructions:
+**Important!** This method of deploying Cloud Access Software on Azure is deprecated and is no-longer being maintained. To deploy Cloud Access Software on Azure please use [Teradici Cloud Access Manager](https://github.com/teradici/deploy) or for more customized deployments, consult Teradici Cloud Access Software documentation for install and usage instructions:
 * [Teradici Cloud Access Software](http://www.teradici.com/products-and-solutions/pcoip-products/cloud-access-software)
 * [Teradici Community Forum](https://communities.teradici.com/topics/cloud+access+software.html)
 * [Teradici Technical Support](https://techsupport.teradici.com)
