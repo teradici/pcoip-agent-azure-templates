@@ -1,18 +1,25 @@
 # Deploy Teradici Cloud Access Software on Azure
 
-Use these steps to deploy a virtual machine on Azure, running Windows Server 2016, and the latest version (2.9.0) of the [Teradici Cloud Access Software](http://www.teradici.com/products-and-solutions/pcoip-products/cloud-access-software) - Standard Edition or Graphics Edition. 
+**Important!** This method of deploying Cloud Access Software on Azure is deprecated and is no-longer being maintained. To deploy Cloud Access Software on Azure please use [Teradici Cloud Access Manager](https://github.com/teradici/deploy) or for more customized deployments, consult Teradici Cloud Access Software documentation for install and usage instructions:
+* [Teradici Cloud Access Software](http://www.teradici.com/products-and-solutions/pcoip-products/cloud-access-software)
+* [Teradici Community Forum](https://communities.teradici.com/topics/cloud+access+software.html)
+* [Teradici Technical Support](https://techsupport.teradici.com)
+
+## Deployment Steps
+
+Use these steps to deploy a virtual machine on Azure, running Windows Server 2016, and version (2.9.0) of [Teradici Cloud Access Software](http://www.teradici.com/products-and-solutions/pcoip-products/cloud-access-software) - Standard Edition or Graphics Edition. 
 
 All resources required to run the Teradici PCoIP Standard or Graphics Agent (components of Teradici Cloud Access Software) will be created and configured in your Azure subscription under a new resource group.
 
 Once deployed, you will be able to connect to the PCoIP agent using the Teradici PCoIP Software Client.
 
-## Before You Begin
+### Before You Begin
 
 * Set up a Microsoft Azure account and ensure you have permissions to create new resource groups and resources. If you don't already have an account, you can sign up for a [free Microsoft Azure account](https://azure.microsoft.com/free/). 
 * Use an existing or [trial](http://connect.teradici.com/cas-trial) registration code for a Teradici PCoIP Standard or Graphics Agent.
 * Download and install the [Teradici PCoIP Software Client](http://www.teradici.com/product-finder/client-downloads).
 
-## Deploy the PCoIP Agent
+### Deploy the PCoIP Agent
 
 Choose whether you want to deploy a Teradici PCoIP Standard or Graphics Agent and deploy it to Azure by clicking the *Deploy to Azure* button.
 
