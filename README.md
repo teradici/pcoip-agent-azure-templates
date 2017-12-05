@@ -7,7 +7,7 @@
 
 ## Deployment Steps
 
-Use these steps to deploy a virtual machine on Azure, running Windows Server 2016, and the latest version (2.9.0) of the [Teradici Cloud Access Software](http://www.teradici.com/products-and-solutions/pcoip-products/cloud-access-software) - Standard Edition or Graphics Edition. 
+Use these steps to deploy a virtual machine on Azure, running Windows Server 2016, and version (2.9.0) of [Teradici Cloud Access Software](http://www.teradici.com/products-and-solutions/pcoip-products/cloud-access-software) - Standard Edition or Graphics Edition. 
 
 All resources required to run the Teradici PCoIP Standard or Graphics Agent (components of Teradici Cloud Access Software) will be created and configured in your Azure subscription under a new resource group.
 
